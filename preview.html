@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💊 Píldora HTML — &lt;dialog&gt;</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d1117;
+      --card:    #161b22;
+      --border:  #30363d;
+      --purple:  #8b5cf6;
+      --purple2: #a78bfa;
+      --cyan:    #22d3ee;
+      --green:   #4ade80;
+      --orange:  #f97316;
+      --red:     #f87171;
+      --white:   #f0f6fc;
+      --gray:    #8b949e;
+      --tag:     #f97316;
+      --attr:    #79c0ff;
+      --str:     #a5d6ff;
+      --kw:      #ff7b72;
+      --mono:    'Fira Code', 'Cascadia Code', monospace;
+      --sans:    'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      font-family: var(--sans);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── Grid bg ─────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(139,92,246,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,92,246,.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Slide wrapper ───────────────────────── */
+    .slides {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .slide {
+      width: 100%;
+      aspect-ratio: 16/9;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .slide-label {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: .75rem;
+      color: var(--gray);
+      letter-spacing: .08em;
+      font-weight: 600;
+      z-index: 10;
+    }
+
+    /* ── Glow blob ───────────────────────────── */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* ════════════════════════════════════════════
+       SLIDE 1 — TÍTULO
+    ════════════════════════════════════════════ */
+    .s1-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.4vw;
+    }
+
+    .pill-badge {
+      background: rgba(139,92,246,.15);
+      border: 1px solid rgba(139,92,246,.5);
+      border-radius: 999px;
+      padding: .5vw 1.8vw;
+      color: var(--purple2);
+      font-size: 1.4vw;
+      font-weight: 700;
+      letter-spacing: .15em;
+      display: flex;
+      align-items: center;
+      gap: .6vw;
+    }
+
+    .main-title {
+      font-family: var(--mono);
+      font-size: 8vw;
+      font-weight: 800;
+      display: flex;
+      gap: .4vw;
+      line-height: 1;
+    }
+    .main-title .t { color: var(--tag); }
+    .main-title .w { color: var(--white); }
+
+    .title-bar {
+      height: .35vw;
+      width: 28vw;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+    }
+
+    .subtitle {
+      color: var(--gray);
+      font-size: 2.1vw;
+      letter-spacing: .05em;
+    }
+
+    /* ════════════════════════════════════════════
+       SLIDE 2 — PROBLEMA
+    ════════════════════════════════════════════ */
+    .s2-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 60%;
+    }
+
+    .section-label {
+      font-size: 1.6vw;
+      font-weight: 700;
+      letter-spacing: .12em;
+      margin-bottom: 1.8vw;
+      display: flex;
+      align-items: center;
+      gap: .7vw;
+    }
+    .section-label.red  { color: var(--red); }
+    .section-label.green { color: var(--green); }
+    .section-label.cyan { color: var(--cyan); }
+    .section-label.purple { color: var(--purple2); }
+
+    .code-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1vw;
+      padding: 1.8vw 2.4vw;
+      width: 100%;
+    }
+
+    .dots {
+      display: flex;
+      gap: .5vw;
+      margin-bottom: 1.4vw;
+    }
+    .dot {
+      width: .9vw;
+      height: .9vw;
+      border-radius: 50%;
+    }
+
+    .code-line {
+      font-family: var(--mono);
+      font-size: 1.4vw;
+      line-height: 2;
+      color: var(--white);
+    }
+    .t  { color: var(--tag); }
+    .a  { color: var(--attr); }
+    .s  { color: var(--str); }
+    .k  { color: var(--kw); }
+    .c  { color: var(--cyan); }
+    .g  { color: var(--gray); }
+
+    .note-row {
+      display: flex;
+      gap: 2vw;
+      margin-top: 1.4vw;
+      color: var(--gray);
+      font-size: 1.3vw;
+    }
+
+    .big-x {
+      position: absolute;
+      right: 6%;
+      bottom: 8%;
+      font-size: 7vw;
+      opacity: .9;
+    }
+
+    /* ════════════════════════════════════════════
+       SLIDE 3 — SOLUCIÓN
+    ════════════════════════════════════════════ */
+    .check-tag {
+      align-self: flex-end;
+      margin-top: 1.2vw;
+      background: rgba(74,222,128,.1);
+      border: 1px solid rgba(74,222,128,.35);
+      border-radius: .7vw;
+      padding: .7vw 1.8vw;
+      color: var(--green);
+      font-size: 1.5vw;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: .6vw;
+    }
+
+    /* ════════════════════════════════════════════
+       SLIDE 4 — DEMO
+    ════════════════════════════════════════════ */
+    .browser {
+      position: relative;
+      width: 55%;
+      aspect-ratio: 5/3;
+      background: #1c1c2e;
+      border-radius: 1vw;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2vw 5vw rgba(0,0,0,.5);
+    }
+
+    .browser-bar {
+      height: 2.8vw;
+      background: #252535;
+      display: flex;
+      align-items: center;
+      padding: 0 1vw;
+      gap: .5vw;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .url-bar {
+      margin-left: .8vw;
+      background: #1a1a2e;
+      border-radius: .4vw;
+      padding: .25vw 1vw;
+      color: var(--gray);
+      font-size: .85vw;
+      width: 18vw;
+    }
+
+    .browser-content {
+      padding: 2vw;
+      position: relative;
+      height: calc(100% - 2.8vw);
+    }
+
+    .page-title {
+      font-size: 1.4vw;
+      font-weight: 700;
+      margin-bottom: 1vw;
+    }
+
+    .open-btn {
+      background: var(--purple);
+      border-radius: .5vw;
+      padding: .6vw 1.4vw;
+      font-size: 1vw;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+    }
+
+    .dialog-box {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e1e3a;
+      border: 2px solid var(--purple);
+      border-radius: 1vw;
+      padding: 2vw 2.5vw;
+      min-width: 22vw;
+      box-shadow: 0 0 3vw rgba(139,92,246,.35);
+    }
+
+    .dialog-title { font-size: 1.5vw; font-weight: 700; margin-bottom: .8vw; }
+    .dialog-body  { color: var(--gray); font-size: 1vw; margin-bottom: 1.2vw; }
+    .dialog-close {
+      background: var(--purple);
+      border: none;
+      border-radius: .5vw;
+      padding: .5vw 1.5vw;
+      color: var(--white);
+      font-size: .95vw;
+      font-weight: 600;
+      float: right;
+      cursor: pointer;
+    }
+
+    .api-tags {
+      position: absolute;
+      bottom: 5%;
+      display: flex;
+      gap: 2vw;
+    }
+
+    .api-tag {
+      font-family: var(--mono);
+      font-size: 1.3vw;
+      border-radius: .5vw;
+      padding: .5vw 1.3vw;
+      border: 1px solid;
+    }
+    .api-tag.open  { color: var(--green);  background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.3); }
+    .api-tag.close { color: var(--red);    background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.3); }
+
+    /* ════════════════════════════════════════════
+       SLIDE 5 — FEATURES
+    ════════════════════════════════════════════ */
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: .8vw;
+      width: 60%;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      gap: 1.3vw;
+      padding: 1.1vw 1.8vw;
+      background: rgba(139,92,246,.06);
+      border: 1px solid rgba(139,92,246,.2);
+      border-radius: .8vw;
+    }
+    .feature-icon { font-size: 2.2vw; }
+    .feature-text { font-size: 1.6vw; color: var(--white); }
+
+    /* ════════════════════════════════════════════
+       SLIDE 6 — OUTRO
+    ════════════════════════════════════════════ */
+    .outro-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5vw;
+      text-align: center;
+    }
+
+    .outro-emoji { font-size: 5vw; }
+
+    .outro-title {
+      font-size: 3.5vw;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .outro-title span { color: var(--purple2); }
+
+    .outro-sub {
+      color: var(--gray);
+      font-size: 1.8vw;
+    }
+
+    .tags-row {
+      display: flex;
+      gap: .8vw;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: .5vw;
+    }
+
+    .hashtag {
+      background: rgba(139,92,246,.15);
+      border: 1px solid rgba(139,92,246,.35);
+      border-radius: 999px;
+      padding: .4vw 1.2vw;
+      color: var(--purple2);
+      font-size: 1.2vw;
+      font-weight: 600;
+    }
+
+    /* ── Nav dots ────────────────────────────── */
+    .nav {
+      position: fixed;
+      right: 1.2vw;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: .6vw;
+      z-index: 100;
+    }
+
+    .nav a {
+      display: block;
+      width: .7vw;
+      height: .7vw;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background .2s, transform .2s;
+    }
+
+    .nav a:hover { background: var(--purple2); transform: scale(1.4); }
+  </style>
+</head>
+<body>
+
+<!-- Nav dots -->
+<nav class="nav">
+  <a href="#s1" title="Título"></a>
+  <a href="#s2" title="Problema"></a>
+  <a href="#s3" title="Solución"></a>
+  <a href="#s4" title="Demo"></a>
+  <a href="#s5" title="Features"></a>
+  <a href="#s6" title="Outro"></a>
+</nav>
+
+<div class="slides">
+
+  <!-- ══════════════════════════════════════
+       SLIDE 1 — TÍTULO
+  ══════════════════════════════════════ -->
+  <section class="slide" id="s1">
+    <div class="glow" style="width:50vw;height:50vw;top:0;left:30%;background:radial-gradient(circle,#8b5cf6 0%,transparent 70%);opacity:.15;"></div>
+    <div class="glow" style="width:25vw;height:25vw;top:10%;left:5%;background:radial-gradient(circle,#22d3ee 0%,transparent 70%);opacity:.07;"></div>
+    <div class="slide-label">ESCENA 1 / 6</div>
+
+    <div class="s1-inner">
+      <div class="pill-badge"><span>💊</span><span>PÍLDORA HTML</span></div>
+      <div class="main-title">
+        <span class="t">&lt;</span>
+        <span class="w">dialog</span>
+        <span class="t">&gt;</span>
+      </div>
+      <div class="title-bar"></div>
+      <div class="subtitle">El modal nativo del navegador</div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 2 — PROBLEMA
+  ══════════════════════════════════════ -->
+  <section class="slide" id="s2">
+    <div class="glow" style="width:35vw;height:35vw;bottom:0;left:0;background:radial-gradient(circle,#f87171 0%,transparent 70%);opacity:.09;"></div>
+    <div class="slide-label">ESCENA 2 / 6</div>
+
+    <div class="s2-inner">
+      <div class="section-label red"><span>😩</span><span>ANTES NECESITABAS...</span></div>
+
+      <div class="code-card">
+        <div class="dots">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#febc2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+        </div>
+        <div class="code-line"><span class="t">&lt;div</span> <span class="a">class</span>=<span class="s">"overlay"</span><span class="t">&gt;</span></div>
+        <div class="code-line">&nbsp;&nbsp;<span class="t">&lt;div</span> <span class="a">class</span>=<span class="s">"modal"</span><span class="t">&gt;</span></div>
+        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t">&lt;div</span> <span class="a">class</span>=<span class="s">"modal-content"</span><span class="t">&gt; ... &lt;/div&gt;</span></div>
+        <div class="code-line">&nbsp;&nbsp;<span class="t">&lt;/div&gt;</span></div>
+        <div class="code-line"><span class="t">&lt;/div&gt;</span></div>
+      </div>
+
+      <div class="note-row">
+        <span>+ CSS para overlay</span>
+        <span>+ JS para abrir/cerrar</span>
+        <span>+ Gestión de focus</span>
+      </div>
+    </div>
+
+    <div class="big-x">❌</div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 3 — SOLUCIÓN
+  ══════════════════════════════════════ -->
+  <section class="slide" id="s3">
+    <div class="glow" style="width:35vw;height:35vw;top:0;right:0;background:radial-gradient(circle,#4ade80 0%,transparent 70%);opacity:.09;"></div>
+    <div class="glow" style="width:25vw;height:25vw;bottom:0;left:5%;background:radial-gradient(circle,#8b5cf6 0%,transparent 70%);opacity:.09;"></div>
+    <div class="slide-label">ESCENA 3 / 6</div>
+
+    <div class="s2-inner">
+      <div class="section-label green"><span>✨</span><span>AHORA ES ASÍ DE SIMPLE</span></div>
+
+      <div class="code-card">
+        <div class="dots">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#febc2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+        </div>
+        <div class="code-line"><span class="g">&lt;!-- HTML --&gt;</span></div>
+        <div class="code-line"><span class="t">&lt;dialog</span> <span class="a">id</span>=<span class="s">"mi-modal"</span><span class="t">&gt;</span></div>
+        <div class="code-line">&nbsp;&nbsp;<span class="t">&lt;h2&gt;</span>Hola 👋<span class="t">&lt;/h2&gt;</span></div>
+        <div class="code-line">&nbsp;&nbsp;<span class="t">&lt;button</span> <span class="a">autofocus</span><span class="t">&gt;</span>Cerrar<span class="t">&lt;/button&gt;</span></div>
+        <div class="code-line"><span class="t">&lt;/dialog&gt;</span></div>
+        <div class="code-line" style="margin-top:.8vw"><span class="g">// JavaScript</span></div>
+        <div class="code-line"><span class="k">const</span> modal = document.<span class="c">querySelector</span>('<span class="s">#mi-modal</span>')</div>
+        <div class="code-line">modal.<span class="c">showModal</span>() <span class="g">// Abrir</span></div>
+        <div class="code-line">modal.<span class="c">close</span>()     <span class="g">// Cerrar</span></div>
+      </div>
+
+      <div class="check-tag"><span>✅</span><span>Solo 5 líneas de HTML</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 4 — DEMO
+  ══════════════════════════════════════ -->
+  <section class="slide" id="s4">
+    <div class="glow" style="width:40vw;height:40vw;top:10%;left:30%;background:radial-gradient(circle,#22d3ee 0%,transparent 70%);opacity:.07;"></div>
+    <div class="slide-label">ESCENA 4 / 6</div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2vw;width:100%;">
+      <div class="section-label cyan"><span>🎬</span><span>ASÍ SE VE EN EL NAVEGADOR</span></div>
+
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot" style="background:#ff5f57;width:.8vw;height:.8vw;"></div>
+          <div class="dot" style="background:#febc2e;width:.8vw;height:.8vw;"></div>
+          <div class="dot" style="background:#28c840;width:.8vw;height:.8vw;"></div>
+          <div class="url-bar">localhost:3000</div>
+        </div>
+        <div class="browser-content">
+          <div class="page-title">Mi App</div>
+          <div class="open-btn">Abrir Modal</div>
+
+          <div class="backdrop"></div>
+
+          <div class="dialog-box">
+            <div class="dialog-title">Hola 👋</div>
+            <div class="dialog-body">Este es un &lt;dialog&gt; nativo del navegador.</div>
+            <button class="dialog-close">Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="api-tags">
+        <div class="api-tag open">modal.showModal()</div>
+        <div class="api-tag close">modal.close()</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 5 — FEATURES
+  ══════════════════════════════════════ -->
+  <section class="slide" id="s5">
+    <div class="glow" style="width:40vw;height:40vw;top:0;right:0;background:radial-gradient(circle,#a78bfa 0%,transparent 70%);opacity:.1;"></div>
+    <div class="slide-label">ESCENA 5 / 6</div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;gap:1.8vw;">
+      <div class="section-label purple"><span>⚡</span><span>¿POR QUÉ USARLO?</span></div>
+
+      <div class="features-list">
+        <div class="feature-row"><span class="feature-icon">🎯</span><span class="feature-text">Nativo del navegador — sin dependencias</span></div>
+        <div class="feature-row"><span class="feature-icon">🎨</span><span class="feature-text">Backdrop automático con <code>::backdrop</code></span></div>
+        <div class="feature-row"><span class="feature-icon">♿</span><span class="feature-text">Accesible por defecto (ARIA, focus trap)</span></div>
+        <div class="feature-row"><span class="feature-icon">⌨️</span><span class="feature-text">Cierre con <kbd>Escape</kbd> integrado</span></div>
+        <div class="feature-row"><span class="feature-icon">🌐</span><span class="feature-text">Soporte en todos los navegadores modernos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 6 — OUTRO
+  ══════════════════════════════════════ -->
+  <section class="slide" id="s6">
+    <div class="glow" style="width:55vw;height:55vw;top:0;left:20%;background:radial-gradient(circle,#8b5cf6 0%,transparent 70%);opacity:.18;"></div>
+    <div class="glow" style="width:25vw;height:25vw;top:5%;left:5%;background:radial-gradient(circle,#22d3ee 0%,transparent 70%);opacity:.07;"></div>
+    <div class="glow" style="width:25vw;height:25vw;bottom:5%;right:5%;background:radial-gradient(circle,#4ade80 0%,transparent 70%);opacity:.07;"></div>
+    <div class="slide-label">ESCENA 6 / 6</div>
+
+    <div class="outro-inner">
+      <div class="outro-emoji">💡</div>
+      <div class="outro-title">
+        &lt;dialog&gt; ya está en<span> todos</span><br>los navegadores modernos
+      </div>
+      <div class="outro-sub">¿Lo estás usando en tus proyectos?</div>
+      <div class="tags-row">
+        <span class="hashtag">#HTML</span>
+        <span class="hashtag">#WebDev</span>
+        <span class="hashtag">#CSS</span>
+        <span class="hashtag">#JavaScript</span>
+        <span class="hashtag">#FrontEnd</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
