@@ -934,5 +934,36 @@ document.addEventListener('keydown',e=>{
   if(e.code==='ArrowLeft') { t=Math.max(0,t-2000); }
 });
 </script>
+
+<!-- ── DOWNLOAD BUTTON ───────────────────── -->
+<div id="dl-btn" title="Descargar archivo HTML" onclick="downloadMe()" style="
+  position:fixed;top:1.5%;right:1.5%;z-index:200;
+  background:rgba(255,215,0,.92);
+  color:#003060;
+  border:none;border-radius:999px;
+  padding:.45em 1.1em;
+  font-family:'Montserrat',Arial,sans-serif;
+  font-size:clamp(10px,1.1vw,15px);
+  font-weight:800;letter-spacing:.06em;
+  cursor:pointer;
+  display:flex;align-items:center;gap:.5em;
+  box-shadow:0 3px 14px rgba(0,0,0,.35);
+  transition:transform .15s,box-shadow .15s;
+" onmouseover="this.style.transform='scale(1.06)';this.style.boxShadow='0 5px 20px rgba(0,0,0,.45)'"
+   onmouseout ="this.style.transform='scale(1)';  this.style.boxShadow='0 3px 14px rgba(0,0,0,.35)'">
+  <span>⬇</span><span>Descargar</span>
+</div>
+
+<script>
+function downloadMe(){
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'MyCard-Pildora21-FamiliaMyCard.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
 </body>
 </html>
