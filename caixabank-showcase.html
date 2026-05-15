@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CaixaBank Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Montserrat',Arial,sans-serif;overflow:hidden}
+
+#vw{position:relative;width:min(100vw,calc(100vh * 16/9));aspect-ratio:16/9;overflow:hidden;cursor:pointer;user-select:none}
+
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .65s ease;pointer-events:none}
+.sc.on{opacity:1;pointer-events:all}
+
+/* ── Stars ── */
+#stars{position:absolute;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;border-radius:50%}
+
+/* ── Glows ── */
+.glow{position:absolute;border-radius:50%;pointer-events:none}
+
+/* ─────────────────────────────────────────
+   SCENE 1 — LOGO
+───────────────────────────────────────── */
+#s1{background:linear-gradient(155deg,#001226 0%,#003B7A 55%,#001226 100%)}
+.letter-wrap{display:flex;gap:.01em;font-family:'Montserrat',sans-serif;font-size:clamp(40px,10vw,170px);font-weight:900;line-height:1}
+.letter{display:inline-block;opacity:0;transform:translateY(8%) scale(.4)}
+.letter.go{animation:letterPop .6s forwards cubic-bezier(.34,1.56,.64,1)}
+@keyframes letterPop{to{opacity:1;transform:translateY(0) scale(1)}}
+.s1-line{height:.35vw;min-height:3px;width:0;border-radius:4px;background:linear-gradient(90deg,transparent,#FFD700,#00AEEF,transparent);transition:width 1s .85s ease-out;margin:.5% 0 1.2%}
+.sc.on .s1-line{width:min(55vw,680px)}
+.s1-sub{opacity:0;transform:translateY(18px);color:#8BAFC8;font-size:clamp(10px,1.5vw,27px);font-weight:600;letter-spacing:.22em;text-transform:uppercase;transition:opacity .6s 1.1s,transform .6s 1.1s}
+.sc.on .s1-sub{opacity:1;transform:translateY(0)}
+.s1-badge{opacity:0;transform:scale(.6);background:rgba(255,215,0,.1);border:1.5px solid rgba(255,215,0,.35);border-radius:999px;padding:.4em 1.4em;color:#FFD700;font-size:clamp(9px,1vw,17px);font-weight:700;letter-spacing:.14em;margin-top:.8%;transition:opacity .5s 1.5s,transform .5s 1.5s cubic-bezier(.34,1.5,.64,1)}
+.sc.on .s1-badge{opacity:1;transform:scale(1)}
+
+/* ─────────────────────────────────────────
+   SCENE 2 — STATS
+───────────────────────────────────────── */
+#s2{background:linear-gradient(135deg,#003B7A 0%,#0055A4 100%);gap:clamp(20px,4vw,64px)}
+.s2-title{opacity:0;transform:translateY(-28px);color:#F0F8FF;font-size:clamp(13px,2vw,36px);font-weight:800;letter-spacing:.15em;text-transform:uppercase;transition:opacity .5s .1s,transform .5s .1s}
+.sc.on .s2-title{opacity:1;transform:translateY(0)}
+.stats-row{display:flex;gap:clamp(16px,3vw,52px)}
+.stat-card{opacity:0;transform:translateY(80px) scale(.7);background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:clamp(12px,1.5vw,28px);padding:clamp(18px,3vw,52px) clamp(22px,3.5vw,60px);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1vw,16px);min-width:clamp(100px,15vw,264px);position:relative;overflow:hidden;transition:opacity .6s,transform .6s cubic-bezier(.34,1.3,.64,1)}
+.stat-card.go{opacity:1;transform:translateY(0) scale(1)}
+.stat-icon{font-size:clamp(18px,2.5vw,46px)}
+.stat-value{font-size:clamp(28px,4.5vw,80px);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.stat-label{color:#8BAFC8;font-size:clamp(8px,.95vw,17px);font-weight:600;text-transform:uppercase;letter-spacing:.1em;text-align:center}
+
+/* SVG arc container */
+.arc-svg{position:absolute;top:clamp(8px,1.2vw,18px);left:50%;transform:translateX(-50%)}
+
+/* ─────────────────────────────────────────
+   SCENE 3 — 3D CARDS
+───────────────────────────────────────── */
+#s3{background:radial-gradient(ellipse at 50% 45%,#0c1a36 0%,#050810 100%);gap:clamp(20px,3.5vw,56px)}
+.s3-title{opacity:0;transform:translateY(24px);color:#F0F8FF;font-size:clamp(12px,1.9vw,34px);font-weight:800;letter-spacing:.16em;text-transform:uppercase;transition:opacity .5s .1s,transform .5s .1s}
+.sc.on .s3-title{opacity:1;transform:translateY(0)}
+.cards-row{display:flex;gap:clamp(10px,1.6vw,28px);align-items:center;perspective:2200px}
+.card3d{opacity:0;transform:translateY(200px) scale(.55);width:clamp(90px,14vw,256px);aspect-ratio:1.585/1;border-radius:clamp(5px,.8vw,14px);padding:clamp(8px,1.1vw,20px) clamp(10px,1.3vw,24px);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;border:1.5px solid rgba(255,255,255,.14);transition:opacity .65s,transform .65s cubic-bezier(.34,1.3,.64,1)}
+.card3d.go{opacity:1}
+.card-shine{position:absolute;top:0;left:0;right:0;height:38%;background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 100%);border-radius:inherit;pointer-events:none}
+.chip{width:clamp(16px,2.4vw,42px);aspect-ratio:1.35/1;background:linear-gradient(135deg,#C8A84B,#F5D679,#A0762A);border-radius:clamp(2px,.4vw,5px);box-shadow:0 2px 7px rgba(0,0,0,.4)}
+.nfc{position:absolute;top:clamp(8px,1.1vw,20px);right:clamp(8px,1.2vw,22px);color:rgba(255,255,255,.35);font-size:clamp(8px,1vw,18px)}
+.cname{font-weight:900;letter-spacing:-.01em;line-height:1.1;font-size:clamp(9px,1.4vw,24px)}
+.csub{color:rgba(255,255,255,.45);font-size:clamp(6px,.7vw,12px);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:.2em}
+.s3-sub{opacity:0;color:rgba(255,255,255,.4);font-size:clamp(9px,1vw,17px);font-weight:600;letter-spacing:.1em;transition:opacity .5s 1.2s}
+.sc.on .s3-sub{opacity:1}
+
+/* ─────────────────────────────────────────
+   SCENE 4 — DIGITAL
+───────────────────────────────────────── */
+#s4{background:linear-gradient(160deg,#001428 0%,#002B5C 55%,#001428 100%);gap:clamp(18px,2.8vw,44px)}
+#s4::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,120,192,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,120,192,.06) 1px,transparent 1px);background-size:72px 72px}
+.s4-headline{opacity:0;transform:scale(.8);text-align:center;z-index:2;transition:opacity .6s .1s,transform .6s .1s cubic-bezier(.34,1.3,.64,1)}
+.sc.on .s4-headline{opacity:1;transform:scale(1)}
+.s4-headline h2{font-size:clamp(26px,5.5vw,78px);font-weight:900;color:#F0F8FF;line-height:1;letter-spacing:-.02em;text-shadow:0 0 50px rgba(0,174,239,.4)}
+.s4-headline .hl{color:#00AEEF;text-shadow:0 0 28px rgba(0,174,239,.7)}
+.dstats{display:flex;gap:clamp(12px,2.5vw,44px);z-index:2}
+.dstat{opacity:0;transform:translateY(24px);text-align:center;background:rgba(0,120,192,.14);border:1px solid rgba(0,174,239,.22);border-radius:clamp(8px,1.1vw,18px);padding:clamp(12px,1.6vw,26px) clamp(18px,2.5vw,40px);transition:opacity .5s,transform .5s}
+.dstat.go{opacity:1;transform:translateY(0)}
+.dstat-n{font-size:clamp(22px,3.5vw,54px);font-weight:900}
+.dstat-l{color:rgba(255,255,255,.55);font-size:clamp(7px,.85vw,14px);font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin-top:.3em}
+.node{position:absolute;border-radius:50%;transition:opacity .4s,transform .4s cubic-bezier(.34,1.5,.64,1)}
+
+/* ─────────────────────────────────────────
+   SCENE 5 — OUTRO
+───────────────────────────────────────── */
+#s5{background:radial-gradient(ellipse at 50% 38%,#0055A4 0%,#001226 65%,#000 100%);gap:clamp(12px,2vw,30px)}
+.ptcl{position:absolute;border-radius:50%;opacity:0;transform:scale(0);transition:opacity .4s,transform .4s cubic-bezier(.34,1.4,.64,1)}
+.s5-logo{opacity:0;transform:scale(.25);display:flex;flex-direction:column;align-items:center;gap:.5%;position:relative;overflow:hidden;z-index:2;transition:opacity .7s .1s,transform .7s .1s cubic-bezier(.34,1.3,.64,1)}
+.sc.on .s5-logo{opacity:1;transform:scale(1)}
+.logo-text{font-family:'Montserrat',sans-serif;font-size:clamp(32px,8vw,128px);font-weight:900;display:flex;gap:.04em;line-height:1;letter-spacing:-.02em}
+.logo-caixa{color:#FFD700;text-shadow:0 0 45px rgba(255,215,0,.7),0 0 90px rgba(255,215,0,.3)}
+.logo-bank{color:#F0F8FF;text-shadow:0 0 35px rgba(255,255,255,.3)}
+.logo-bar{height:.35vw;min-height:3px;width:100%;border-radius:3px;background:linear-gradient(90deg,transparent,#FFD700,#00AEEF,transparent)}
+.s5-tag{opacity:0;transform:translateY(18px);color:#F0F8FF;font-size:clamp(10px,1.7vw,30px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;z-index:2;transition:opacity .6s .55s,transform .6s .55s}
+.sc.on .s5-tag{opacity:1;transform:translateY(0)}
+.s5-badge{opacity:0;transform:scale(.75);background:rgba(255,215,0,.1);border:2px solid rgba(255,215,0,.55);border-radius:999px;padding:.6em 2em;color:#FFD700;font-size:clamp(9px,1.15vw,21px);font-weight:800;letter-spacing:.13em;text-transform:uppercase;z-index:2;text-shadow:0 0 20px rgba(255,215,0,.5);transition:opacity .5s .8s,transform .5s .8s cubic-bezier(.34,1.5,.64,1)}
+.sc.on .s5-badge{opacity:1;transform:scale(1)}
+.s5-products{opacity:0;display:flex;gap:.9%;flex-wrap:wrap;justify-content:center;z-index:2;transition:opacity .5s 1.1s}
+.sc.on .s5-products{opacity:1}
+.ptag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:.3em 1.1em;color:rgba(255,255,255,.8);font-size:clamp(8px,.85vw,14px);font-weight:700;letter-spacing:.06em}
+
+/* Shine sweep */
+.shine{position:absolute;top:-30%;bottom:-30%;width:20%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-14deg);pointer-events:none;animation:shine .9s .25s ease-out forwards;opacity:0}
+@keyframes shine{0%{left:-25%;opacity:1}100%{left:125%;opacity:1}}
+
+/* ─────────────────────────────────────────
+   CONTROLS
+───────────────────────────────────────── */
+#ctrl{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;z-index:50;background:linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 100%);padding:0 3% 2%;gap:.7%;opacity:0;transition:opacity .3s}
+#vw:hover #ctrl{opacity:1}
+#pbar{height:.38vw;min-height:3px;background:rgba(255,255,255,.18);border-radius:4px;overflow:hidden;cursor:pointer}
+#pfill{height:100%;background:linear-gradient(90deg,#FFD700,#00AEEF);border-radius:4px;width:0%;transition:width .1s linear}
+.crow{display:flex;align-items:center;gap:1.5%}
+#pbtn{background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.4);border-radius:50%;width:clamp(26px,3.2vw,48px);aspect-ratio:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:clamp(11px,1.3vw,20px);color:#fff;transition:background .2s,transform .15s;flex-shrink:0}
+#pbtn:hover{background:rgba(255,255,255,.28);transform:scale(1.08)}
+#tlabel{color:rgba(255,255,255,.65);font-size:clamp(8px,.9vw,13px);font-weight:700;letter-spacing:.04em}
+.sdots{margin-left:auto;display:flex;gap:.55vw;align-items:center}
+.sdot{width:.7vw;height:.7vw;min-width:5px;min-height:5px;border-radius:50%;background:rgba(255,255,255,.28);transition:background .3s,transform .3s;cursor:pointer}
+.sdot.on{background:#FFD700;transform:scale(1.35)}
+
+#pov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:60;gap:2%;transition:opacity .4s}
+#pov.hid{opacity:0;pointer-events:none}
+.pbig{width:clamp(55px,9vw,130px);aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.14);border:2.5px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:clamp(24px,4vw,58px);color:#fff;cursor:pointer;animation:pulse 2s ease-in-out infinite}
+.pbig:hover{background:rgba(255,255,255,.28);animation:none}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.phint{color:rgba(255,255,255,.8);font-size:clamp(9px,1.1vw,16px);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+/* download btn */
+#dlbtn{position:fixed;top:1.5%;right:1.5%;z-index:200;background:rgba(255,215,0,.92);color:#003060;border:none;border-radius:999px;padding:.45em 1.1em;font-family:'Montserrat',Arial,sans-serif;font-size:clamp(9px,1vw,14px);font-weight:800;letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;gap:.5em;box-shadow:0 3px 14px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s}
+#dlbtn:hover{transform:scale(1.06);box-shadow:0 5px 20px rgba(0,0,0,.45)}
+</style>
+</head>
+<body>
+
+<button id="dlbtn" onclick="downloadMe()">⬇ Descargar</button>
+
+<div id="vw">
+
+  <!-- STARS -->
+  <div id="stars"></div>
+
+  <!-- S1: LOGO -->
+  <div id="s1" class="sc on">
+    <div style="position:absolute;width:55vw;height:55vw;top:-10%;left:20%;background:radial-gradient(circle,#00AEEF 0%,transparent 70%);opacity:.12;border-radius:50%;pointer-events:none"></div>
+    <div style="position:absolute;width:30vw;height:30vw;bottom:0;left:0;background:radial-gradient(circle,#0077C0 0%,transparent 70%);opacity:.1;border-radius:50%;pointer-events:none"></div>
+    <div class="letter-wrap" id="letters"></div>
+    <div class="s1-line"></div>
+    <div class="s1-sub">La mayor entidad bancaria de España</div>
+    <div class="s1-badge">★ DESDE 1904 ★</div>
+  </div>
+
+  <!-- S2: STATS -->
+  <div id="s2" class="sc">
+    <div style="position:absolute;width:40vw;height:40vw;top:-10%;right:-5%;background:radial-gradient(circle,#FFD700 0%,transparent 70%);opacity:.09;border-radius:50%;pointer-events:none"></div>
+    <div class="s2-title">⚡ CaixaBank en cifras</div>
+    <div class="stats-row">
+      <div class="stat-card" id="sc0" style="transition-delay:.1s">
+        <svg class="arc-svg" id="arc0" width="min(140px,9vw)" height="min(140px,9vw)" viewBox="0 0 140 140">
+          <path d="M 55.7 11.7 A 58 58 0 1 1 84.3 11.7" fill="none" stroke="#00AEEF" stroke-width="9" stroke-linecap="round" opacity=".15"/>
+          <path id="ap0" d="M 55.7 11.7 A 58 58 0 0 1 55.7 11.7" fill="none" stroke="#00AEEF" stroke-width="7" stroke-linecap="round" style="filter:drop-shadow(0 0 9px #00AEEF)"/>
+        </svg>
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="sv0" style="color:#00AEEF;text-shadow:0 0 22px #00AEEF88">0M+</div>
+        <div class="stat-label">Clientes activos</div>
+      </div>
+      <div class="stat-card" id="sc1" style="transition-delay:.28s">
+        <svg class="arc-svg" id="arc1" width="min(140px,9vw)" height="min(140px,9vw)" viewBox="0 0 140 140">
+          <path d="M 55.7 11.7 A 58 58 0 1 1 84.3 11.7" fill="none" stroke="#FFD700" stroke-width="9" stroke-linecap="round" opacity=".15"/>
+          <path id="ap1" d="M 55.7 11.7 A 58 58 0 0 1 55.7 11.7" fill="none" stroke="#FFD700" stroke-width="7" stroke-linecap="round" style="filter:drop-shadow(0 0 9px #FFD700)"/>
+        </svg>
+        <div class="stat-icon">🏆</div>
+        <div class="stat-value" id="sv1" style="color:#FFD700;text-shadow:0 0 22px #FFD70088">0º</div>
+        <div class="stat-label">Banco en España</div>
+      </div>
+      <div class="stat-card" id="sc2" style="transition-delay:.46s">
+        <svg class="arc-svg" id="arc2" width="min(140px,9vw)" height="min(140px,9vw)" viewBox="0 0 140 140">
+          <path d="M 55.7 11.7 A 58 58 0 1 1 84.3 11.7" fill="none" stroke="#4FC3F7" stroke-width="9" stroke-linecap="round" opacity=".15"/>
+          <path id="ap2" d="M 55.7 11.7 A 58 58 0 0 1 55.7 11.7" fill="none" stroke="#4FC3F7" stroke-width="7" stroke-linecap="round" style="filter:drop-shadow(0 0 9px #4FC3F7)"/>
+        </svg>
+        <div class="stat-icon">🏢</div>
+        <div class="stat-value" id="sv2" style="color:#4FC3F7;text-shadow:0 0 22px #4FC3F788">0K</div>
+        <div class="stat-label">Oficinas en el mundo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: 3D CARDS -->
+  <div id="s3" class="sc">
+    <div style="position:absolute;width:60vw;height:60vw;top:0;left:20%;background:radial-gradient(circle,#0077C0 0%,transparent 70%);opacity:.1;border-radius:50%;pointer-events:none"></div>
+    <div class="s3-title">💳 Familia MyCard</div>
+    <div class="cards-row">
+      <div class="card3d" id="cd0" style="background:linear-gradient(135deg,#0d2657,#1a3d8f);box-shadow:0 28px 56px rgba(0,0,0,.5),0 0 36px #4FC3F733;transform:translateY(200px) scale(.55) perspective(1100px) rotateX(-9deg) rotateY(-18deg);transition-delay:.08s">
+        <div class="card-shine"></div><div class="chip"></div>
+        <div class="nfc">))))</div>
+        <div><div class="cname" style="color:#4FC3F7;text-shadow:0 0 18px #4FC3F788">MyCard</div><div class="csub">Débito estándar</div></div>
+      </div>
+      <div class="card3d" id="cd1" style="background:linear-gradient(135deg,#1e0a35,#5b21b6);box-shadow:0 28px 56px rgba(0,0,0,.5),0 0 36px #CE93D833;transform:translateY(200px) scale(.55) perspective(1100px) rotateX(-4deg) rotateY(-6deg);transition-delay:.22s">
+        <div class="card-shine"></div><div class="chip"></div>
+        <div class="nfc">))))</div>
+        <div><div class="cname" style="color:#CE93D8;text-shadow:0 0 18px #CE93D888;font-style:italic">imagin</div><div class="csub">Para jóvenes</div></div>
+      </div>
+      <div class="card3d" id="cd2" style="background:linear-gradient(135deg,#1a1000,#4a3000);box-shadow:0 28px 56px rgba(0,0,0,.5),0 0 36px #FFD70033;transform:translateY(200px) scale(.55) perspective(1100px) rotateX(1deg) rotateY(0deg);transition-delay:.36s">
+        <div class="card-shine"></div><div class="chip"></div>
+        <div class="nfc">))))</div>
+        <div><div class="cname" style="color:#FFD700;text-shadow:0 0 18px #FFD70088">Premier</div><div class="csub">Servicios premium</div></div>
+      </div>
+      <div class="card3d" id="cd3" style="background:linear-gradient(135deg,#0a0a1a,#1e1e3a);box-shadow:0 28px 56px rgba(0,0,0,.5),0 0 36px #90CAF933;transform:translateY(200px) scale(.55) perspective(1100px) rotateX(5deg) rotateY(7deg);transition-delay:.50s">
+        <div class="card-shine"></div><div class="chip"></div>
+        <div class="nfc">))))</div>
+        <div><div class="cname" style="color:#90CAF9;text-shadow:0 0 18px #90CAF988">Negocios</div><div class="csub">Autónomos</div></div>
+      </div>
+      <div class="card3d" id="cd4" style="background:linear-gradient(135deg,#041e1e,#0a4040);box-shadow:0 28px 56px rgba(0,0,0,.5),0 0 36px #4DB6AC33;transform:translateY(200px) scale(.55) perspective(1100px) rotateX(8deg) rotateY(15deg);transition-delay:.64s">
+        <div class="card-shine"></div><div class="chip"></div>
+        <div class="nfc">))))</div>
+        <div><div class="cname" style="color:#4DB6AC;text-shadow:0 0 18px #4DB6AC88;font-style:italic">carnet</div><div class="csub">Universitarios</div></div>
+      </div>
+    </div>
+    <div class="s3-sub">Una tarjeta para cada perfil · Sin complicaciones</div>
+  </div>
+
+  <!-- S4: DIGITAL -->
+  <div id="s4" class="sc">
+    <div style="position:absolute;width:55vw;height:55vw;top:0;left:22%;background:radial-gradient(circle,#00AEEF 0%,transparent 70%);opacity:.09;border-radius:50%;pointer-events:none;z-index:1"></div>
+    <div id="nodes-wrap" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+    <div class="s4-headline" style="z-index:2">
+      <h2>Banca del <span class="hl">Futuro</span></h2>
+    </div>
+    <div class="dstats">
+      <div class="dstat" id="ds0" style="transition-delay:.35s"><div class="dstat-n" style="color:#00AEEF;text-shadow:0 0 22px #00AEEF88">10M+</div><div class="dstat-l">Usuarios app móvil</div></div>
+      <div class="dstat" id="ds1" style="transition-delay:.55s"><div class="dstat-n" style="color:#FFD700;text-shadow:0 0 22px #FFD70088">97%</div><div class="dstat-l">Transacciones digitales</div></div>
+      <div class="dstat" id="ds2" style="transition-delay:.75s"><div class="dstat-n" style="color:#4FC3F7;text-shadow:0 0 22px #4FC3F788">24/7</div><div class="dstat-l">Servicio disponible</div></div>
+    </div>
+  </div>
+
+  <!-- S5: OUTRO -->
+  <div id="s5" class="sc">
+    <div id="ptcls-wrap" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+    <div class="s5-logo" style="z-index:2">
+      <div class="shine"></div>
+      <div class="logo-text"><span class="logo-caixa">Caixa</span><span class="logo-bank">Bank</span></div>
+      <div class="logo-bar"></div>
+    </div>
+    <div class="s5-tag" style="z-index:2">Marca recomendada de banca</div>
+    <div class="s5-badge" style="z-index:2">★ El banco de cada persona ★</div>
+    <div class="s5-products" style="z-index:2">
+      <span class="ptag">MyCard</span><span class="ptag">imagin</span>
+      <span class="ptag">Premier</span><span class="ptag">Negocios</span>
+      <span class="ptag">Carnet</span><span class="ptag">CaixaBank Pay</span>
+    </div>
+  </div>
+
+  <!-- PLAY OVERLAY -->
+  <div id="pov">
+    <div class="pbig" id="pbigbtn">▶</div>
+    <div class="phint">Reproducir</div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div id="ctrl">
+    <div id="pbar"><div id="pfill"></div></div>
+    <div class="crow">
+      <button id="pbtn">▶</button>
+      <span id="tlabel">0:00 / 0:18</span>
+      <div class="sdots">
+        <div class="sdot on" data-s="0"></div>
+        <div class="sdot" data-s="1"></div>
+        <div class="sdot" data-s="2"></div>
+        <div class="sdot" data-s="3"></div>
+        <div class="sdot" data-s="4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Stars ─────────────────────────────────── */
+const starsEl = document.getElementById('stars');
+for(let i=0;i<90;i++){
+  const d = document.createElement('div');
+  d.className='star';
+  const col = i%4===0?'#FFD700':i%4===1?'#00AEEF':'#F0F8FF';
+  const sz  = 1+(i%3)*0.6;
+  d.style.cssText=`left:${(i*137.508)%100}%;top:${(i*73.137)%100}%;width:${sz}px;height:${sz}px;background:${col};opacity:${0.12+(i%5)*0.06}`;
+  starsEl.appendChild(d);
+}
+
+/* Twinkle */
+setInterval(()=>{
+  starsEl.querySelectorAll('.star').forEach((s,i)=>{
+    s.style.opacity = (0.12+(i%5)*0.06)*(0.6+Math.random()*0.4);
+  });
+},120);
+
+/* ── Letters S1 ────────────────────────────── */
+const WORD='CaixaBank';
+const lettersEl=document.getElementById('letters');
+WORD.split('').forEach((l,i)=>{
+  const s=document.createElement('span');
+  s.className='letter';
+  s.textContent=l;
+  s.style.color=i<5?'#FFD700':'#F0F8FF';
+  s.style.textShadow=i<5?'0 0 28px rgba(255,215,0,.5)':'0 0 25px rgba(255,255,255,.2)';
+  lettersEl.appendChild(s);
+});
+
+/* ── Nodes S4 ──────────────────────────────── */
+const nodesWrap=document.getElementById('nodes-wrap');
+const NDATA=Array.from({length:15},(_,i)=>({
+  x:8+(i%5)*21, y:18+Math.floor(i/5)*30,
+  sz:8+(i%4)*3,
+  col:i%3===0?'#00AEEF':i%3===1?'#FFD700':'#0077C0'
+}));
+NDATA.forEach((n,i)=>{
+  const d=document.createElement('div');
+  d.className='node';
+  d.style.cssText=`left:${n.x}%;top:${n.y}%;width:${n.sz}px;height:${n.sz}px;background:${n.col};box-shadow:0 0 ${n.sz*2.5}px ${n.col};opacity:0;transform:scale(0)`;
+  nodesWrap.appendChild(d);
+});
+
+/* ── Particles S5 ─────────────────────────── */
+const ptclsWrap=document.getElementById('ptcls-wrap');
+const PTCLS=Array.from({length:64},(_,i)=>{
+  const a=(i/64)*Math.PI*2;
+  const r=100+(i%9)*44;
+  return {x:50+Math.cos(a)*(r/19.2),y:50+Math.sin(a)*(r/10.8),sz:3+(i%4),col:i%4===0?'#FFD700':i%4===1?'#00AEEF':i%4===2?'#0077C0':'#fff'};
+});
+PTCLS.forEach((p,i)=>{
+  const d=document.createElement('div');
+  d.className='ptcl';
+  d.style.cssText=`left:${p.x}%;top:${p.y}%;width:${p.sz}px;height:${p.sz}px;background:${p.col};box-shadow:0 0 ${p.sz*3}px ${p.col};transition-delay:${(Math.floor(i/7)*80)}ms`;
+  ptclsWrap.appendChild(d);
+});
+
+/* ── Timeline ──────────────────────────────── */
+const TOTAL = 18700;
+const SCENES_T = [[0,3800],[3200,7400],[6800,11200],[10600,15000],[14400,18700]];
+const scEls = [0,1,2,3,4].map(i=>document.getElementById('s'+i));
+const dots  = document.querySelectorAll('.sdot');
+const pfill = document.getElementById('pfill');
+const tlabel= document.getElementById('tlabel');
+const pbtn  = document.getElementById('pbtn');
+const pov   = document.getElementById('pov');
+const pbig  = document.getElementById('pbigbtn');
+const pbar  = document.getElementById('pbar');
+
+let t=0,playing=false,raf=null,lastTs=null,cur=-1;
+let triggeredScenes=new Set();
+
+function fmt(ms){const s=Math.floor(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
+
+function triggerScene(idx){
+  if(triggeredScenes.has(idx)) return;
+  triggeredScenes.add(idx);
+  if(idx===0){
+    /* Letters */
+    document.querySelectorAll('.letter').forEach((l,i)=>{
+      setTimeout(()=>{l.classList.add('go')},i*75);
+    });
+  }
+  if(idx===1){
+    [0,1,2].forEach(i=>{
+      setTimeout(()=>{
+        document.getElementById('sc'+i).classList.add('go');
+        animateArc(i);
+        animateCounter(i);
+      },i*200);
+    });
+  }
+  if(idx===2){
+    [0,1,2,3,4].forEach(i=>{
+      setTimeout(()=>{
+        const c=document.getElementById('cd'+i);
+        const transforms=[
+          'translateY(0) scale(1) perspective(1100px) rotateX(-9deg) rotateY(-18deg)',
+          'translateY(0) scale(1) perspective(1100px) rotateX(-4deg) rotateY(-6deg)',
+          'translateY(0) scale(1) perspective(1100px) rotateX(1deg) rotateY(0deg)',
+          'translateY(0) scale(1) perspective(1100px) rotateX(5deg) rotateY(7deg)',
+          'translateY(0) scale(1) perspective(1100px) rotateX(8deg) rotateY(15deg)',
+        ];
+        c.style.opacity='1';
+        c.style.transform=transforms[i];
+        /* floating */
+        let ph=0;
+        setInterval(()=>{
+          ph+=0.06;
+          const base=transforms[i];
+          c.style.transform=base.replace('translateY(0)','translateY('+Math.sin(ph+i)*6+'px)');
+        },33);
+      },i*180);
+    });
+  }
+  if(idx===3){
+    document.querySelectorAll('.node').forEach((n,i)=>{
+      setTimeout(()=>{
+        n.style.opacity='1'; n.style.transform='scale(1)';
+        let ph=0;
+        setInterval(()=>{ph+=0.07; n.style.opacity=String(0.7+Math.sin(ph+i)*0.3);},80);
+      },i*80);
+    });
+    [0,1,2].forEach(i=>setTimeout(()=>document.getElementById('ds'+i).classList.add('go'),400+i*200));
+  }
+  if(idx===4){
+    document.querySelectorAll('.ptcl').forEach((p,i)=>{
+      setTimeout(()=>{
+        p.style.opacity='1'; p.style.transform='scale(1)';
+        let ph=0;
+        setInterval(()=>{ph+=0.07; p.style.opacity=String(0.4+Math.sin(ph+i)*0.4);},90);
+      },i*18);
+    });
+  }
+}
+
+/* Arc animation */
+function arcPath(cx,cy,r,a0,a1){
+  const toR=d=>(d-90)*Math.PI/180;
+  const sx=cx+r*Math.cos(toR(a0)), sy=cy+r*Math.sin(toR(a0));
+  const ex=cx+r*Math.cos(toR(a1)), ey=cy+r*Math.sin(toR(a1));
+  const lg=a1-a0>180?1:0;
+  return `M ${sx} ${sy} A ${r} ${r} 0 ${lg} 1 ${ex} ${ey}`;
+}
+function animateArc(idx){
+  const el=document.getElementById('ap'+idx);
+  let a=-40, start=null;
+  function step(ts){
+    if(!start) start=ts;
+    const prog=Math.min((ts-start)/1200,1);
+    const ease=1-Math.pow(1-prog,3);
+    a=-40+ease*280;
+    el.setAttribute('d',arcPath(70,70,58,-40,a));
+    if(prog<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* Counter animation */
+const COUNTERDATA=[{el:'sv0',target:20,suffix:'M+'},{el:'sv1',target:1,suffix:'º'},{el:'sv2',target:5,suffix:'K'}];
+function animateCounter(idx){
+  const {el,target,suffix}=COUNTERDATA[idx];
+  const elNode=document.getElementById(el);
+  let start=null;
+  function step(ts){
+    if(!start) start=ts;
+    const prog=Math.min((ts-start)/1800,1);
+    const ease=1-Math.pow(1-prog,3);
+    elNode.textContent=Math.round(ease*target)+suffix;
+    if(prog<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function activateScene(idx){
+  if(idx===cur) return;
+  cur=idx;
+  scEls.forEach((el,i)=>el.classList.toggle('on',i===idx));
+  dots.forEach((d,i)=>d.classList.toggle('on',i===idx));
+  triggerScene(idx);
+}
+
+function tick(ts){
+  if(!playing) return;
+  if(!lastTs) lastTs=ts;
+  const dt=Math.min(ts-lastTs,80); lastTs=ts;
+  t=Math.min(t+dt,TOTAL);
+  pfill.style.width=(t/TOTAL*100)+'%';
+  tlabel.textContent=`${fmt(t)} / ${fmt(TOTAL)}`;
+  let act=0;
+  for(let i=SCENES_T.length-1;i>=0;i--){ if(t>=SCENES_T[i][0]){act=i;break;} }
+  activateScene(act);
+  if(t>=TOTAL){stop(true);return;}
+  raf=requestAnimationFrame(tick);
+}
+
+function play(){
+  if(t>=TOTAL) t=0;
+  playing=true; lastTs=null;
+  pbtn.textContent='⏸'; pov.classList.add('hid');
+  raf=requestAnimationFrame(tick);
+}
+function pause(){
+  playing=false; lastTs=null;
+  pbtn.textContent='▶';
+  if(raf){cancelAnimationFrame(raf);raf=null;}
+}
+function stop(ended=false){
+  pause();
+  if(ended){ pbtn.textContent='↩'; pbig.textContent='↩'; pov.classList.remove('hid'); }
+}
+function toggle(){if(playing)pause();else play();}
+function reset(){
+  t=0; triggeredScenes=new Set(); cur=-1;
+  document.querySelectorAll('.letter').forEach(l=>l.classList.remove('go'));
+  [0,1,2].forEach(i=>{document.getElementById('sc'+i).classList.remove('go');document.getElementById('ap'+i).setAttribute('d','M 55.7 11.7 A 58 58 0 0 1 55.7 11.7');document.getElementById('sv'+i).textContent=['0M+','0º','0K'][i];});
+  [0,1,2,3,4].forEach(i=>{const c=document.getElementById('cd'+i);c.style.opacity='0';});
+  document.querySelectorAll('.node').forEach(n=>{n.style.opacity='0';n.style.transform='scale(0)';});
+  [0,1,2].forEach(i=>document.getElementById('ds'+i).classList.remove('go'));
+  document.querySelectorAll('.ptcl').forEach(p=>{p.style.opacity='0';p.style.transform='scale(0)';});
+}
+
+pbtn.addEventListener('click',e=>{e.stopPropagation();toggle();});
+pbig.addEventListener('click',e=>{e.stopPropagation();reset();play();});
+document.getElementById('vw').addEventListener('click',toggle);
+pbar.addEventListener('click',e=>{
+  e.stopPropagation();
+  const r=pbar.getBoundingClientRect();
+  t=Math.max(0,Math.min(TOTAL,(e.clientX-r.left)/r.width*TOTAL));
+  if(!playing){pfill.style.width=(t/TOTAL*100)+'%';}
+});
+document.querySelectorAll('.sdot').forEach((d,i)=>d.addEventListener('click',e=>{
+  e.stopPropagation();
+  reset(); t=SCENES_T[i][0]+100; play();
+}));
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'){e.preventDefault();toggle();}
+  if(e.code==='ArrowRight') t=Math.min(TOTAL,t+1500);
+  if(e.code==='ArrowLeft')  t=Math.max(0,t-1500);
+});
+
+/* Download */
+function downloadMe(){
+  const blob=new Blob([document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='CaixaBank-Showcase.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
