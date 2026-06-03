@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>CaixaBank Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Montserrat',sans-serif}
+
+/* ── Fullscreen 16:9 ── */
+#stage{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+#film{
+  position:relative;
+  width:min(100vw, calc(100vh * 16/9));
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:#000;
+}
+
+/* ── Scenes ── */
+.sc{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  opacity:0;
+  transition:opacity .8s ease;
+  pointer-events:none;
+}
+.sc.on{opacity:1}
+
+/* ════════════════════════════════════
+   SCENE 1 — LOGO REVEAL
+════════════════════════════════════ */
+#s1{background:radial-gradient(ellipse at 50% 40%, #003B7A 0%, #000d1f 70%)}
+
+.letters{
+  display:flex;
+  font-size:clamp(50px,11vw,180px);
+  font-weight:900;
+  line-height:1;
+}
+.lt{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(60%) scale(.3) rotate(-8deg);
+  transition:opacity .5s, transform .6s cubic-bezier(.34,1.6,.64,1);
+}
+.lt.go{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
+.lt.gold{color:#FFD700;text-shadow:0 0 40px rgba(255,215,0,.7),0 0 80px rgba(255,215,0,.3)}
+.lt.white{color:#fff;text-shadow:0 0 30px rgba(255,255,255,.4)}
+
+#glow1{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%, rgba(0,174,239,.2) 0%, transparent 65%);
+  opacity:0;transition:opacity 1.5s;
+}
+.sc.on #glow1{opacity:1}
+
+.s1bar{
+  height:.5vw;min-height:4px;
+  width:0;border-radius:4px;
+  background:linear-gradient(90deg,transparent,#FFD700,#00AEEF,transparent);
+  transition:width 1.2s .8s ease-out;
+  margin:.6% 0 1.4%;
+}
+.sc.on .s1bar{width:min(60vw,750px)}
+
+.s1sub{
+  opacity:0;transform:translateY(20px);
+  color:rgba(255,255,255,.6);
+  font-size:clamp(10px,1.6vw,26px);
+  font-weight:600;letter-spacing:.25em;text-transform:uppercase;
+  transition:opacity .7s 1.2s, transform .7s 1.2s;
+}
+.sc.on .s1sub{opacity:1;transform:translateY(0)}
+
+.s1badge{
+  opacity:0;transform:scale(.5);
+  background:rgba(255,215,0,.1);
+  border:2px solid rgba(255,215,0,.5);
+  border-radius:999px;
+  padding:.5em 2em;
+  color:#FFD700;
+  font-size:clamp(10px,1.2vw,20px);
+  font-weight:800;letter-spacing:.2em;
+  transition:opacity .6s 1.8s, transform .6s 1.8s cubic-bezier(.34,1.5,.64,1);
+  margin-top:1%;
+}
+.sc.on .s1badge{opacity:1;transform:scale(1)}
+
+/* ════════════════════════════════════
+   SCENE 2 — MEGA STAT
+════════════════════════════════════ */
+#s2{background:linear-gradient(145deg,#001f50 0%,#0055A4 50%,#001f50 100%)}
+
+.s2title{
+  opacity:0;transform:translateY(-40px);
+  color:#fff;
+  font-size:clamp(14px,2.2vw,38px);
+  font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+  transition:opacity .5s .1s, transform .5s .1s;
+  margin-bottom:4%;
+}
+.sc.on .s2title{opacity:1;transform:translateY(0)}
+
+.stats3{display:flex;gap:clamp(14px,3vw,56px)}
+
+.scard{
+  opacity:0;transform:translateY(90px) scale(.65);
+  background:rgba(255,255,255,.07);
+  border:2px solid rgba(255,255,255,.12);
+  border-radius:clamp(10px,1.5vw,28px);
+  padding:clamp(20px,3.5vw,56px) clamp(24px,4vw,64px);
+  display:flex;flex-direction:column;align-items:center;
+  gap:clamp(8px,1.2vw,18px);
+  min-width:clamp(110px,16vw,280px);
+  position:relative;overflow:hidden;
+  transition:opacity .7s, transform .7s cubic-bezier(.34,1.3,.64,1);
+}
+.scard.go{opacity:1;transform:translateY(0) scale(1)}
+.scard::before{
+  content:'';position:absolute;
+  top:-50%;left:-50%;width:200%;height:200%;
+  background:conic-gradient(transparent 0deg, rgba(255,255,255,.04) 60deg, transparent 120deg);
+  animation:rotateBg 8s linear infinite;
+}
+@keyframes rotateBg{to{transform:rotate(360deg)}}
+
+.si{font-size:clamp(22px,3.5vw,56px)}
+.sv{
+  font-size:clamp(36px,6vw,96px);
+  font-weight:900;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.sl{
+  color:rgba(255,255,255,.55);
+  font-size:clamp(9px,1vw,18px);
+  font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;text-align:center;
+}
+
+/* SVG arc */
+.arcwrap{position:absolute;top:clamp(6px,1vw,16px);left:50%;transform:translateX(-50%);opacity:.9}
+
+/* ════════════════════════════════════
+   SCENE 3 — CARDS FAN
+════════════════════════════════════ */
+#s3{background:radial-gradient(ellipse at 50% 60%, #0a1a40 0%, #030812 100%)}
+
+.s3title{
+  opacity:0;transform:translateY(30px);
+  color:#fff;font-size:clamp(14px,2.2vw,36px);
+  font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+  transition:opacity .5s .1s, transform .5s .1s;
+  margin-bottom:4%;
+}
+.sc.on .s3title{opacity:1;transform:translateY(0)}
+
+.fan{
+  display:flex;gap:clamp(10px,1.8vw,30px);
+  align-items:center;
+  perspective:2400px;
+}
+
+.card{
+  opacity:0;
+  width:clamp(100px,15vw,270px);
+  aspect-ratio:1.585;
+  border-radius:clamp(6px,1vw,16px);
+  padding:clamp(10px,1.3vw,22px) clamp(12px,1.5vw,26px);
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+  border:1.5px solid rgba(255,255,255,.15);
+  transform:translateY(120px) scale(.5);
+  transition:opacity .6s, transform .6s cubic-bezier(.34,1.4,.64,1);
+}
+.card.go{opacity:1}
+.card-shine{
+  position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 100%);
+  pointer-events:none;
+}
+.chip{
+  width:clamp(20px,3vw,48px);aspect-ratio:1.4;
+  background:linear-gradient(135deg,#C8A84B,#F5D679,#A0762A);
+  border-radius:clamp(3px,.5vw,6px);
+  box-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+.nfc{
+  position:absolute;top:clamp(8px,1.2vw,20px);right:clamp(8px,1.2vw,20px);
+  color:rgba(255,255,255,.3);font-size:clamp(8px,1.1vw,18px);
+}
+.cname{font-weight:900;font-size:clamp(10px,1.6vw,26px);line-height:1}
+.ctag{font-size:clamp(6px,.75vw,12px);font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.5;margin-top:.2em}
+
+/* ════════════════════════════════════
+   SCENE 4 — DIGITAL
+════════════════════════════════════ */
+#s4{background:linear-gradient(160deg,#000e28 0%,#001f50 50%,#000e28 100%)}
+#s4::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,120,200,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,120,200,.07) 1px,transparent 1px);
+  background-size:64px 64px;
+}
+
+.s4head{
+  opacity:0;transform:scale(.75);
+  text-align:center;z-index:2;
+  transition:opacity .7s .1s, transform .7s .1s cubic-bezier(.34,1.3,.64,1);
+}
+.sc.on .s4head{opacity:1;transform:scale(1)}
+.s4head h2{
+  font-size:clamp(30px,7vw,110px);
+  font-weight:900;color:#fff;line-height:1;
+  letter-spacing:-.02em;
+}
+.s4head .cyan{color:#00AEEF;text-shadow:0 0 40px rgba(0,174,239,.8),0 0 80px rgba(0,174,239,.3)}
+
+.drow{display:flex;gap:clamp(12px,2.5vw,44px);z-index:2;margin-top:4%}
+.dbox{
+  opacity:0;transform:translateY(30px);
+  text-align:center;
+  background:rgba(0,120,200,.15);
+  border:1.5px solid rgba(0,174,239,.25);
+  border-radius:clamp(8px,1.2vw,20px);
+  padding:clamp(14px,2vw,30px) clamp(20px,3vw,48px);
+  transition:opacity .5s, transform .5s;
+  z-index:2;
+}
+.dbox.go{opacity:1;transform:translateY(0)}
+.dn{font-size:clamp(24px,4.5vw,68px);font-weight:900}
+.dl{color:rgba(255,255,255,.5);font-size:clamp(8px,.9vw,15px);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:.4em}
+
+/* Nodes */
+.node{position:absolute;border-radius:50%;transition:.4s}
+
+/* ════════════════════════════════════
+   SCENE 5 — PRODUCTS GRID
+════════════════════════════════════ */
+#s5{background:linear-gradient(135deg,#002060 0%,#0044aa 50%,#002060 100%)}
+
+.s5title{
+  opacity:0;transform:translateY(-30px);
+  color:#fff;font-size:clamp(14px,2vw,34px);
+  font-weight:800;letter-spacing:.15em;text-transform:uppercase;
+  transition:opacity .5s .1s,transform .5s .1s;
+  margin-bottom:3%;
+}
+.sc.on .s5title{opacity:1;transform:translateY(0)}
+
+.pgrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(8px,1.2vw,20px);
+  width:82%;
+}
+.pitem{
+  opacity:0;transform:translateX(-30px);
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.14);
+  border-radius:clamp(8px,1vw,16px);
+  padding:clamp(12px,1.6vw,24px) clamp(14px,1.8vw,28px);
+  display:flex;align-items:center;gap:clamp(8px,1.2vw,18px);
+  transition:opacity .55s, transform .55s cubic-bezier(.34,1.2,.64,1);
+}
+.pitem.go{opacity:1;transform:translateX(0)}
+.picon{
+  width:clamp(32px,4.5vw,64px);aspect-ratio:1;
+  border-radius:clamp(6px,.8vw,12px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(16px,2.2vw,30px);
+  flex-shrink:0;
+}
+.ptxt{}
+.ptitle2{font-weight:800;font-size:clamp(10px,1.3vw,20px);color:#fff}
+.psub{font-size:clamp(7px,.85vw,13px);color:rgba(255,255,255,.55);font-weight:600;margin-top:.2em}
+
+/* ════════════════════════════════════
+   SCENE 6 — FINALE
+════════════════════════════════════ */
+#s6{background:radial-gradient(ellipse at 50% 35%, #0055A4 0%, #000d24 60%, #000 100%)}
+
+.ptcl{position:absolute;border-radius:50%;pointer-events:none}
+
+.finale-logo{
+  opacity:0;transform:scale(.2);
+  display:flex;flex-direction:column;align-items:center;gap:.5%;
+  position:relative;overflow:hidden;z-index:2;
+  transition:opacity .8s .1s, transform .8s .1s cubic-bezier(.34,1.25,.64,1);
+}
+.sc.on .finale-logo{opacity:1;transform:scale(1)}
+
+.bigname{
+  font-size:clamp(40px,10vw,150px);
+  font-weight:900;display:flex;gap:.04em;line-height:1;
+  letter-spacing:-.02em;
+}
+.bc{color:#FFD700;text-shadow:0 0 50px rgba(255,215,0,.8),0 0 100px rgba(255,215,0,.4)}
+.bw{color:#fff;text-shadow:0 0 40px rgba(255,255,255,.4)}
+
+.fbar{height:.45vw;min-height:4px;width:100%;border-radius:4px;background:linear-gradient(90deg,transparent,#FFD700,#00AEEF,transparent)}
+
+.shine-sweep{
+  position:absolute;top:-50%;bottom:-50%;width:18%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:skewX(-12deg);
+  animation:sweep .9s .3s ease-out forwards;
+  opacity:0;
+}
+@keyframes sweep{0%{left:-20%;opacity:1}100%{left:120%;opacity:1}}
+
+.ftag{
+  opacity:0;transform:translateY(22px);
+  color:#fff;font-size:clamp(12px,2vw,32px);
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  z-index:2;
+  transition:opacity .6s .7s, transform .6s .7s;
+}
+.sc.on .ftag{opacity:1;transform:translateY(0)}
+
+.fbadge{
+  opacity:0;transform:scale(.7);
+  background:rgba(255,215,0,.1);border:2px solid rgba(255,215,0,.6);
+  border-radius:999px;padding:.6em 2.5em;
+  color:#FFD700;font-size:clamp(10px,1.3vw,22px);font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;z-index:2;
+  text-shadow:0 0 24px rgba(255,215,0,.6);
+  transition:opacity .6s 1.1s, transform .6s 1.1s cubic-bezier(.34,1.4,.64,1);
+}
+.sc.on .fbadge{opacity:1;transform:scale(1)}
+
+.ftags{
+  opacity:0;display:flex;gap:1%;flex-wrap:wrap;justify-content:center;
+  z-index:2;transition:opacity .6s 1.5s;
+}
+.sc.on .ftags{opacity:1}
+.ftag2{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:.35em 1.2em;color:rgba(255,255,255,.85);font-size:clamp(8px,.9vw,15px);font-weight:700;letter-spacing:.06em}
+
+/* ── Progress bar ── */
+#prog{
+  position:absolute;bottom:0;left:0;right:0;
+  height:clamp(3px,.4vw,6px);
+  background:rgba(255,255,255,.1);
+  z-index:100;
+}
+#progfill{
+  height:100%;
+  background:linear-gradient(90deg,#FFD700,#00AEEF);
+  width:0%;
+  transition:width .1s linear;
+}
+
+/* ── Scene counter ── */
+#scounter{
+  position:absolute;top:2%;right:2%;
+  display:flex;gap:.5vw;z-index:100;
+}
+.sdot{
+  width:clamp(6px,.7vw,10px);height:clamp(6px,.7vw,10px);
+  border-radius:50%;background:rgba(255,255,255,.25);
+  transition:.3s;
+}
+.sdot.on{background:#FFD700;transform:scale(1.4)}
+
+/* ── Download ── */
+#dl{
+  position:fixed;top:2%;right:2%;z-index:999;
+  background:rgba(255,215,0,.92);color:#002060;
+  border:none;border-radius:999px;
+  padding:.5em 1.3em;
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(9px,1vw,15px);font-weight:800;letter-spacing:.06em;
+  cursor:pointer;display:flex;align-items:center;gap:.5em;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  transition:transform .15s;
+}
+#dl:hover{transform:scale(1.06)}
+</style>
+</head>
+<body>
+
+<button id="dl" onclick="dlMe()">⬇ Descargar</button>
+
+<div id="stage"><div id="film">
+
+  <!-- stars -->
+  <div id="stars" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+
+  <!-- S1: LOGO -->
+  <div id="s1" class="sc">
+    <div id="glow1"></div>
+    <div class="letters" id="ltrs"></div>
+    <div class="s1bar"></div>
+    <div class="s1sub">La mayor entidad bancaria de España</div>
+    <div class="s1badge">★ DESDE 1904 · PRESENTE EN +50 PAÍSES ★</div>
+  </div>
+
+  <!-- S2: STATS -->
+  <div id="s2" class="sc">
+    <div class="s2title">⚡ CaixaBank en cifras</div>
+    <div class="stats3">
+
+      <div class="scard" id="sc0">
+        <svg class="arcwrap" width="min(9vw,130px)" height="min(9vw,130px)" viewBox="0 0 130 130">
+          <path d="M52 12A58 58 0 1 1 78 12" fill="none" stroke="#00AEEF" stroke-width="10" stroke-linecap="round" opacity=".12"/>
+          <path id="a0" d="M52 12A58 58 0 0 1 52 12" fill="none" stroke="#00AEEF" stroke-width="8" stroke-linecap="round" style="filter:drop-shadow(0 0 8px #00AEEF)"/>
+        </svg>
+        <div class="si">👥</div>
+        <div class="sv" id="v0" style="color:#00AEEF;text-shadow:0 0 24px #00AEEF88">0</div>
+        <div class="sl">Millones de clientes</div>
+      </div>
+
+      <div class="scard" id="sc1">
+        <svg class="arcwrap" width="min(9vw,130px)" height="min(9vw,130px)" viewBox="0 0 130 130">
+          <path d="M52 12A58 58 0 1 1 78 12" fill="none" stroke="#FFD700" stroke-width="10" stroke-linecap="round" opacity=".12"/>
+          <path id="a1" d="M52 12A58 58 0 0 1 52 12" fill="none" stroke="#FFD700" stroke-width="8" stroke-linecap="round" style="filter:drop-shadow(0 0 8px #FFD700)"/>
+        </svg>
+        <div class="si">🏆</div>
+        <div class="sv" id="v1" style="color:#FFD700;text-shadow:0 0 24px #FFD70088">—</div>
+        <div class="sl">Nº1 banco en España</div>
+      </div>
+
+      <div class="scard" id="sc2">
+        <svg class="arcwrap" width="min(9vw,130px)" height="min(9vw,130px)" viewBox="0 0 130 130">
+          <path d="M52 12A58 58 0 1 1 78 12" fill="none" stroke="#4FC3F7" stroke-width="10" stroke-linecap="round" opacity=".12"/>
+          <path id="a2" d="M52 12A58 58 0 0 1 52 12" fill="none" stroke="#4FC3F7" stroke-width="8" stroke-linecap="round" style="filter:drop-shadow(0 0 8px #4FC3F7)"/>
+        </svg>
+        <div class="si">🏢</div>
+        <div class="sv" id="v2" style="color:#4FC3F7;text-shadow:0 0 24px #4FC3F788">0</div>
+        <div class="sl">Oficinas en el mundo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- S3: CARDS -->
+  <div id="s3" class="sc">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,80,180,.2) 0%,transparent 65%);pointer-events:none"></div>
+    <div class="s3title">💳 Familia MyCard — Una tarjeta para cada perfil</div>
+    <div class="fan" id="fan"></div>
+  </div>
+
+  <!-- S4: DIGITAL -->
+  <div id="s4" class="sc">
+    <div id="nwrap" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+    <div class="s4head">
+      <h2>Banca del <span class="cyan">Futuro</span></h2>
+    </div>
+    <div class="drow">
+      <div class="dbox" id="d0"><div class="dn" style="color:#00AEEF;text-shadow:0 0 24px #00AEEF88">10M+</div><div class="dl">Usuarios app</div></div>
+      <div class="dbox" id="d1"><div class="dn" style="color:#FFD700;text-shadow:0 0 24px #FFD70088">97%</div><div class="dl">Transacciones digitales</div></div>
+      <div class="dbox" id="d2"><div class="dn" style="color:#4FC3F7;text-shadow:0 0 24px #4FC3F788">24/7</div><div class="dl">Servicio disponible</div></div>
+    </div>
+  </div>
+
+  <!-- S5: PRODUCTS -->
+  <div id="s5" class="sc">
+    <div class="s5title">🌟 El ecosistema completo CaixaBank</div>
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+
+  <!-- S6: FINALE -->
+  <div id="s6" class="sc">
+    <div id="ptcls" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+    <div class="finale-logo" style="z-index:2">
+      <div class="shine-sweep"></div>
+      <div class="bigname"><span class="bc">Caixa</span><span class="bw">Bank</span></div>
+      <div class="fbar"></div>
+    </div>
+    <div class="ftag">Marca recomendada de banca · España</div>
+    <div class="fbadge">★ El banco de cada persona ★</div>
+    <div class="ftags">
+      <span class="ftag2">MyCard</span><span class="ftag2">imagin</span>
+      <span class="ftag2">Premier</span><span class="ftag2">Negocios</span>
+      <span class="ftag2">Carnet</span><span class="ftag2">CaixaBank Pay</span>
+      <span class="ftag2">+50 países</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div id="prog"><div id="progfill"></div></div>
+  <div id="scounter"></div>
+
+</div></div>
+
+<script>
+/* ── Stars ── */
+const stEl=document.getElementById('stars');
+for(let i=0;i<100;i++){
+  const d=document.createElement('div');
+  const sz=1+(i%3)*.7, col=i%4===0?'#FFD700':i%4===1?'#00AEEF':'#fff';
+  d.style.cssText=`position:absolute;border-radius:50%;width:${sz}px;height:${sz}px;background:${col};left:${(i*137.5)%100}%;top:${(i*73.1)%100}%;opacity:${.1+(i%5)*.06}`;
+  stEl.appendChild(d);
+}
+setInterval(()=>stEl.querySelectorAll('div').forEach((s,i)=>{s.style.opacity=(0.1+(i%5)*.06)*(0.5+Math.random()*.5)}),150);
+
+/* ── Letters ── */
+const ltrs=document.getElementById('ltrs');
+'CaixaBank'.split('').forEach((l,i)=>{
+  const s=document.createElement('span');
+  s.className='lt '+(i<5?'gold':'white');
+  s.textContent=l;
+  s.style.transitionDelay=i*.07+'s';
+  ltrs.appendChild(s);
+});
+
+/* ── Cards ── */
+const CARDS=[
+  {name:'MyCard',     sub:'Débito estándar',  bg:'linear-gradient(135deg,#0a2060,#1a4090)', acc:'#4FC3F7'},
+  {name:'imagin',     sub:'Para jóvenes',      bg:'linear-gradient(135deg,#1a0535,#5020a0)', acc:'#CE93D8', italic:true},
+  {name:'Premier',    sub:'Servicios premium', bg:'linear-gradient(135deg,#1a0f00,#4a2800)', acc:'#FFD700'},
+  {name:'Negocios',   sub:'Autónomos',         bg:'linear-gradient(135deg,#080818,#181830)', acc:'#90CAF9'},
+  {name:'Carnet',     sub:'Universitarios',    bg:'linear-gradient(135deg,#031515,#0a3535)', acc:'#4DB6AC', italic:true},
+];
+const fan=document.getElementById('fan');
+const rotations=['perspective(1100px) rotateX(-10deg) rotateY(-20deg)',
+  'perspective(1100px) rotateX(-5deg) rotateY(-8deg)',
+  'perspective(1100px) rotateX(0deg) rotateY(0deg)',
+  'perspective(1100px) rotateX(4deg) rotateY(8deg)',
+  'perspective(1100px) rotateX(8deg) rotateY(18deg)'];
+
+CARDS.forEach((c,i)=>{
+  const el=document.createElement('div');
+  el.className='card';
+  el.id='card'+i;
+  el.style.background=c.bg;
+  el.style.boxShadow=`0 24px 50px rgba(0,0,0,.5), 0 0 30px ${c.acc}33`;
+  el.style.transitionDelay=(i*.14)+'s';
+  el.innerHTML=`<div class="card-shine"></div>
+    <div class="chip"></div>
+    <div class="nfc">))))</div>
+    <div>
+      <div class="cname" style="color:${c.acc};text-shadow:0 0 16px ${c.acc}88;${c.italic?'font-style:italic':''}">${c.name}</div>
+      <div class="ctag">${c.sub}</div>
+    </div>`;
+  fan.appendChild(el);
+});
+
+/* ── Products grid ── */
+const PRODS=[
+  {icon:'💳',name:'MyCard',      sub:'Débito para el día a día',      bg:'#0a2060'},
+  {icon:'⭐',name:'MyCard Premier',sub:'Ventajas y servicios premium', bg:'#3a1800'},
+  {icon:'🎨',name:'imagin',      sub:'Banca digital para jóvenes',    bg:'#2a0860'},
+  {icon:'💼',name:'Negocios MyCard',sub:'Para autónomos y empresas',  bg:'#080818'},
+  {icon:'🎓',name:'Carnet',      sub:'Estudiantes universitarios',    bg:'#031515'},
+  {icon:'📱',name:'CaixaBank Pay',sub:'Pagos móviles NFC',           bg:'#001a40'},
+];
+const pgrid=document.getElementById('pgrid');
+PRODS.forEach((p,i)=>{
+  const el=document.createElement('div');
+  el.className='pitem';
+  el.id='pi'+i;
+  el.style.transitionDelay=(i*.1)+'s';
+  el.innerHTML=`<div class="picon" style="background:${p.bg}">${p.icon}</div>
+    <div class="ptxt"><div class="ptitle2">${p.name}</div><div class="psub">${p.sub}</div></div>`;
+  pgrid.appendChild(el);
+});
+
+/* ── Nodes S4 ── */
+const nwrap=document.getElementById('nwrap');
+const ND=Array.from({length:18},(_,i)=>({x:5+(i%6)*19,y:15+Math.floor(i/6)*32,sz:7+(i%4)*3,col:i%3===0?'#00AEEF':i%3===1?'#FFD700':'#0077C0'}));
+ND.forEach(n=>{
+  const d=document.createElement('div');
+  d.className='node';
+  d.style.cssText=`left:${n.x}%;top:${n.y}%;width:${n.sz}px;height:${n.sz}px;background:${n.col};box-shadow:0 0 ${n.sz*2}px ${n.col};opacity:0;transform:scale(0)`;
+  nwrap.appendChild(d);
+});
+
+/* ── Particles S6 ── */
+const ptcls=document.getElementById('ptcls');
+const PTCLS=Array.from({length:80},(_,i)=>{
+  const a=(i/80)*Math.PI*2,r=90+(i%10)*40;
+  return{x:50+Math.cos(a)*(r/17),y:50+Math.sin(a)*(r/10),sz:2+(i%5),col:i%4===0?'#FFD700':i%4===1?'#00AEEF':i%4===2?'#0077C0':'#fff'};
+});
+PTCLS.forEach(p=>{
+  const d=document.createElement('div');
+  d.className='ptcl';
+  d.style.cssText=`left:${p.x}%;top:${p.y}%;width:${p.sz}px;height:${p.sz}px;background:${p.col};box-shadow:0 0 ${p.sz*3}px ${p.col};opacity:0;transform:scale(0);position:absolute;border-radius:50%`;
+  ptcls.appendChild(d);
+});
+
+/* ── Scene dots ── */
+const cnt=document.getElementById('scounter');
+for(let i=0;i<6;i++){const d=document.createElement('div');d.className='sdot'+(i===0?' on':'');d.id='dot'+i;cnt.appendChild(d);}
+
+/* ── Arc path ── */
+function ap(cx,cy,r,a0,a1){
+  const tr=d=>(d-90)*Math.PI/180;
+  const sx=cx+r*Math.cos(tr(a0)),sy=cy+r*Math.sin(tr(a0));
+  const ex=cx+r*Math.cos(tr(a1)),ey=cy+r*Math.sin(tr(a1));
+  return`M ${sx} ${sy} A ${r} ${r} 0 ${a1-a0>180?1:0} 1 ${ex} ${ey}`;
+}
+
+/* ── Timeline ──────────────────────────────────
+   6 scenes × ~6s each = 36s total
+─────────────────────────────────────────────── */
+const TOTAL=35000;
+const SCENE_IN=[0, 5500, 11000, 16500, 22000, 28000];
+const SCENE_OUT=[6500,12000,17500,23000,29000,35000];
+
+const scenes=['s1','s2','s3','s4','s5','s6'].map(id=>document.getElementById(id));
+let triggered=new Set(), curSc=-1;
+let t=0, lastTs=null, raf=null;
+
+function arcAnim(idx,col){
+  const el=document.getElementById('a'+idx);
+  let st=null;
+  (function step(ts){
+    if(!st)st=ts;
+    const p=Math.min((ts-st)/1800,1), e=1-Math.pow(1-p,3);
+    el.setAttribute('d',ap(65,65,52,-40,-40+e*280));
+    if(p<1)requestAnimationFrame(step);
+  })(performance.now());
+}
+function countAnim(idx,target,suffix){
+  const el=document.getElementById('v'+idx);
+  let st=null;
+  (function step(ts){
+    if(!st)st=ts;
+    const p=Math.min((ts-st)/2000,1), e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(e*target)+suffix;
+    if(p<1)requestAnimationFrame(step);
+  })(performance.now());
+}
+
+function triggerScene(i){
+  if(triggered.has(i))return;
+  triggered.add(i);
+
+  if(i===0){
+    // Letters pop in
+    document.querySelectorAll('.lt').forEach((l,j)=>setTimeout(()=>l.classList.add('go'),j*80));
+  }
+  if(i===1){
+    // Stats
+    ['sc0','sc1','sc2'].forEach((id,j)=>setTimeout(()=>{
+      document.getElementById(id).classList.add('go');
+      arcAnim(j);
+      if(j===0)countAnim(0,20,'M+');
+      if(j===1)setTimeout(()=>{document.getElementById('v1').textContent='Nº1'},800);
+      if(j===2)countAnim(2,5000,'');
+    },j*250));
+  }
+  if(i===2){
+    // Cards
+    document.querySelectorAll('.card').forEach((c,j)=>{
+      setTimeout(()=>{
+        c.classList.add('go');
+        c.style.transform=rotations[j];
+        let ph=j*.8;
+        setInterval(()=>{ph+=.05;c.style.transform=rotations[j].replace('(1100px)','(1100px)').replace('rotateX(','rotateX(').replace('translateY(0)','').split(')').map((s,k)=>k===0?s+')':s).join('')+` translateY(${Math.sin(ph)*7}px)`;},35);
+      },j*160);
+    });
+  }
+  if(i===3){
+    // Nodes
+    nwrap.querySelectorAll('.node').forEach((n,j)=>setTimeout(()=>{
+      n.style.opacity='1';n.style.transform='scale(1)';
+      let ph=j*.5;
+      setInterval(()=>{ph+=.08;n.style.opacity=String(0.65+Math.sin(ph)*.35)},80);
+    },j*60));
+    ['d0','d1','d2'].forEach((id,j)=>setTimeout(()=>document.getElementById(id).classList.add('go'),500+j*200));
+  }
+  if(i===4){
+    // Products
+    document.querySelectorAll('.pitem').forEach((el,j)=>setTimeout(()=>el.classList.add('go'),j*120));
+  }
+  if(i===5){
+    // Particles
+    ptcls.querySelectorAll('.ptcl').forEach((p,j)=>setTimeout(()=>{
+      p.style.opacity='1';p.style.transform='scale(1)';
+      let ph=j*.4;
+      setInterval(()=>{ph+=.06;p.style.opacity=String(0.35+Math.sin(ph)*.35)},90);
+    },j*15));
+  }
+}
+
+function activateScene(i){
+  if(i===curSc)return;
+  curSc=i;
+  scenes.forEach((s,j)=>s.classList.toggle('on',j===i));
+  document.querySelectorAll('.sdot').forEach((d,j)=>d.classList.toggle('on',j===i));
+  triggerScene(i);
+}
+
+function tick(ts){
+  if(!lastTs)lastTs=ts;
+  const dt=Math.min(ts-lastTs,80);lastTs=ts;
+  t=Math.min(t+dt,TOTAL);
+  document.getElementById('progfill').style.width=(t/TOTAL*100)+'%';
+  // which scene?
+  let sc=5;
+  for(let i=0;i<6;i++){if(t>=SCENE_IN[i]&&t<SCENE_OUT[i]){sc=i;break;}}
+  if(t>=SCENE_OUT[5])sc=5;
+  activateScene(sc);
+  if(t<TOTAL)raf=requestAnimationFrame(tick);
+  else{raf=null;}
+}
+
+// ─ AUTOPLAY ─
+function startVideo(){
+  t=0;triggered=new Set();curSc=-1;lastTs=null;
+  // reset
+  document.querySelectorAll('.lt').forEach(l=>l.classList.remove('go'));
+  ['sc0','sc1','sc2'].forEach(id=>document.getElementById(id).classList.remove('go'));
+  document.querySelectorAll('.card').forEach(c=>{c.classList.remove('go');c.style.transform='';});
+  nwrap.querySelectorAll('.node').forEach(n=>{n.style.opacity='0';n.style.transform='scale(0)';});
+  ['d0','d1','d2'].forEach(id=>document.getElementById(id).classList.remove('go'));
+  document.querySelectorAll('.pitem').forEach(el=>el.classList.remove('go'));
+  ptcls.querySelectorAll('.ptcl').forEach(p=>{p.style.opacity='0';p.style.transform='scale(0)';});
+  activateScene(0);
+  if(raf)cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(tick);
+}
+
+// Click to restart
+document.getElementById('film').addEventListener('click',startVideo);
+
+// AUTOPLAY on load
+window.addEventListener('load',()=>setTimeout(startVideo,400));
+
+function dlMe(){
+  const b=new Blob([document.documentElement.outerHTML],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='CaixaBank-Showcase.html';a.click();
+}
+</script>
+</body>
+</html>
