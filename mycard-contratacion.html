@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>MyCard · Más fácil de contratar</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Montserrat',Arial,sans-serif}
+
+/* ── Stage ── */
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#film{
+  position:relative;
+  width:min(100vw,calc(100vh*16/9));
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:#000;
+  cursor:pointer;
+}
+
+/* ── Scenes ── */
+.sc{position:absolute;inset:0;opacity:0;transition:opacity .7s ease;pointer-events:none}
+.sc.on{opacity:1;pointer-events:auto}
+
+/* ══════════════════════════════════
+   SCENE 1 — OFFICE
+══════════════════════════════════ */
+#s1{background:#e8ecf0}
+
+/* Parallax camera pan */
+.cam{
+  position:absolute;inset:-4%;
+  transform:scale(1.12) translateX(2%);
+  transition:none;
+}
+.cam.go{
+  animation:camDrift 3.2s cubic-bezier(.25,.1,.25,1) forwards;
+}
+@keyframes camDrift{
+  0%  {transform:scale(1.12) translateX(2%)}
+  100%{transform:scale(1.05) translateX(0)}
+}
+
+/* --- Office background layers --- */
+.bg-ceil{
+  position:absolute;top:0;left:0;right:0;height:34%;
+  background:linear-gradient(180deg,#f8f8f8 0%,#ececec 100%);
+}
+/* Ceiling slats — louvre style like CaixaBank offices */
+.slats{
+  position:absolute;top:0;left:0;right:0;height:34%;
+  background:repeating-linear-gradient(
+    180deg,
+    rgba(0,0,0,.06) 0px,rgba(0,0,0,.06) 2px,
+    transparent 2px,transparent 28px
+  );
+}
+
+/* Back wall */
+.bg-wall{
+  position:absolute;top:34%;left:0;right:0;height:24%;
+  background:linear-gradient(180deg,#dde1e8 0%,#d0d4dc 100%);
+}
+/* Large window on back wall */
+.window{
+  position:absolute;top:34%;right:8%;width:22%;height:20%;
+  background:linear-gradient(160deg,#b8d4f0 0%,#d6eaff 60%,#e8f4ff 100%);
+  border:3px solid rgba(255,255,255,.6);
+  box-shadow:inset 0 0 40px rgba(180,210,240,.4);
+}
+.window::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:3px;background:rgba(255,255,255,.5)}
+.window::after{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:rgba(255,255,255,.5)}
+
+/* CaixaBank logo on wall */
+.wall-brand{
+  position:absolute;top:36%;right:32%;
+  display:flex;align-items:center;gap:.6vw;
+  opacity:.7;
+}
+.wall-star{width:clamp(14px,2.2vw,32px);height:clamp(14px,2.2vw,32px)}
+.wall-name{font-size:clamp(8px,1.1vw,17px);font-weight:800;color:#003CA6;letter-spacing:.04em}
+
+/* Floor */
+.bg-floor{
+  position:absolute;top:58%;left:0;right:0;bottom:0;
+  background:linear-gradient(180deg,#c9a97a 0%,#b58f60 100%);
+}
+.floor-grid{
+  position:absolute;top:58%;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent,transparent 6%,
+    rgba(0,0,0,.04) 6%,rgba(0,0,0,.04) 6.2%
+  );
+}
+
+/* Desk */
+.desk{
+  position:absolute;
+  bottom:34%;left:25%;right:20%;
+  height:11%;
+  background:linear-gradient(180deg,#5c3d1e 0%,#3e2810 100%);
+  border-radius:4px;
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
+.desk::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+}
+
+/* Water bottle on desk */
+.bottle{
+  position:absolute;bottom:45%;left:27%;
+  width:clamp(6px,.9vw,14px);height:clamp(18px,3.5vw,52px);
+  background:linear-gradient(180deg,rgba(200,230,255,.8),rgba(150,200,255,.4));
+  border-radius:40% 40% 20% 20%;
+  border:1px solid rgba(255,255,255,.6);
+}
+
+/* Tablet on desk */
+.tablet-wrap{
+  position:absolute;bottom:44%;left:46%;
+  width:clamp(60px,10vw,160px);
+  aspect-ratio:1.5/1;
+}
+.tablet{
+  width:100%;height:100%;
+  background:#111;border-radius:6px;
+  border:3px solid #444;
+  box-shadow:0 6px 24px rgba(0,0,0,.5);
+  overflow:hidden;position:relative;
+}
+.tablet-screen{
+  position:absolute;inset:4px;
+  background:#fff;border-radius:2px;
+  overflow:hidden;
+}
+
+/* App on tablet */
+.tab-app{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden}
+.tab-hdr{background:#003CA6;padding:8% 6% 6%;flex-shrink:0}
+.tab-hdr-t{color:#fff;font-size:clamp(4px,.7vw,11px);font-weight:800}
+.tab-hdr-s{color:rgba(255,255,255,.6);font-size:clamp(3px,.5vw,8px);margin-top:1px}
+.tab-body{flex:1;padding:6%;display:flex;flex-direction:column;gap:4%}
+.tab-row{display:flex;align-items:center;gap:4%;padding:4% 3%;border:1px solid #e0e6f0;border-radius:4px;font-size:clamp(3px,.5vw,8px);color:#333}
+.tab-row .dot{width:clamp(4px,.7vw,10px);height:clamp(4px,.7vw,10px);border-radius:50%;background:#003CA6;flex-shrink:0}
+.tab-row .ck{color:#003CA6;font-size:clamp(4px,.6vw,9px);margin-left:auto;opacity:0;transition:opacity .3s}
+.tab-row.filled .ck{opacity:1}
+.tab-cta{margin-top:auto;background:#003CA6;color:#fff;border-radius:4px;padding:5% 8%;font-size:clamp(3px,.55vw,9px);font-weight:700;text-align:center;position:relative;overflow:hidden}
+.tab-cta-bar{position:absolute;bottom:0;left:0;height:2px;background:#FFD700;width:0;transition:width 2s linear}
+
+/* People silhouettes */
+/* Left person (client) */
+.p-client{position:absolute;bottom:42%;left:30%}
+.p-c-head{width:clamp(18px,2.8vw,44px);height:clamp(18px,2.8vw,44px);border-radius:50%;background:#d4a47a;margin:0 auto}
+.p-c-body{width:clamp(34px,5vw,80px);height:clamp(20px,3.5vw,55px);background:#4a5568;border-radius:40% 40% 0 0;margin:2px auto 0}
+
+/* Right person (gestor/advisor) */
+.p-gestor{position:absolute;bottom:42%;right:24%}
+.p-g-head{width:clamp(18px,2.8vw,44px);height:clamp(18px,2.8vw,44px);border-radius:50%;background:#c49070;margin:0 auto}
+.p-g-body{width:clamp(34px,5vw,80px);height:clamp(20px,3.5vw,55px);background:#003CA6;border-radius:40% 40% 0 0;margin:2px auto 0}
+
+/* MyCard on desk */
+.card-on-desk{
+  position:absolute;bottom:44%;right:28%;
+  width:clamp(40px,7vw,108px);
+  aspect-ratio:1.585;
+  background:linear-gradient(135deg,#1a1a2e,#2d2d4e);
+  border-radius:4px;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  transform:rotate(-4deg);
+  overflow:hidden;
+}
+.card-on-desk::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
+}
+.card-visa-small{position:absolute;bottom:8%;right:6%;font-size:clamp(5px,.8vw,12px);font-weight:900;font-style:italic;color:rgba(255,255,255,.5)}
+.card-mc-name{position:absolute;bottom:24%;left:6%;font-size:clamp(4px,.65vw,9px);font-weight:900;color:#fff;letter-spacing:.04em}
+
+/* Brochures on desk */
+.brochure{
+  position:absolute;bottom:43%;right:22%;
+  width:clamp(20px,3.5vw,54px);height:clamp(25px,4.5vw,68px);
+  background:linear-gradient(160deg,#fff,#f0f4ff);
+  border:1px solid rgba(0,60,166,.2);
+  border-radius:2px;
+  transform:rotate(3deg);
+  box-shadow:2px 3px 8px rgba(0,0,0,.15);
+}
+.brochure::before{
+  content:'';position:absolute;top:15%;left:8%;right:8%;height:4px;
+  background:#003CA6;border-radius:2px;
+}
+.brochure::after{
+  content:'';position:absolute;top:28%;left:8%;right:20%;height:3px;
+  background:rgba(0,60,166,.2);border-radius:2px;
+}
+
+/* Background people */
+.bg-person{position:absolute}
+.bp1{bottom:55%;left:8%}
+.bp2{bottom:55%;left:14%}
+.bp-head{width:clamp(10px,1.8vw,26px);height:clamp(10px,1.8vw,26px);border-radius:50%;opacity:.7}
+.bp-body{height:clamp(14px,2.5vw,36px);border-radius:30% 30% 0 0;opacity:.7;margin:1px auto 0}
+
+/* Glowing screen effect on background */
+.monitor-glow{
+  position:absolute;bottom:55%;left:10%;
+  width:clamp(30px,5vw,80px);height:clamp(20px,3.5vw,56px);
+  background:linear-gradient(160deg,#1a3a6e,#0055A4);
+  border:2px solid #444;border-radius:3px;
+  box-shadow:0 0 20px rgba(0,90,200,.3);
+}
+.monitor-glow::before{content:'';position:absolute;inset:4px;background:rgba(0,60,166,.6);border-radius:2px}
+
+/* Vignette overlay */
+.vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,.3) 100%);
+}
+
+/* ── Scene 1 text ── */
+.s1-text{
+  position:absolute;bottom:12%;left:0;right:0;
+  display:flex;justify-content:center;
+  z-index:10;
+}
+.s1-pill{
+  background:rgba(0,30,100,.82);
+  backdrop-filter:blur(16px);
+  border-left:4px solid #FFD700;
+  padding:1.1% 3.5%;
+  border-radius:0 6px 6px 0;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .6s .7s, transform .6s .7s;
+}
+.sc.on .s1-pill{opacity:1;transform:translateY(0)}
+.s1-pill span{
+  color:#fff;
+  font-size:clamp(11px,2vw,30px);
+  font-weight:700;
+  letter-spacing:.01em;
+}
+
+/* ══════════════════════════════════
+   SCENE 2 — DIGITAL APP
+══════════════════════════════════ */
+#s2{background:#f0f4ff}
+
+.app-wrap{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  animation:scaleIn .6s ease-out both;
+}
+@keyframes scaleIn{from{transform:scale(1.06)}to{transform:scale(1)}}
+
+.app-frame{
+  width:68%;height:88%;
+  background:#fff;
+  border-radius:clamp(8px,1.2vw,20px);
+  box-shadow:0 30px 90px rgba(0,60,166,.18),0 4px 20px rgba(0,0,0,.08);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+
+/* App header */
+.app-hdr{
+  background:#003CA6;
+  padding:2.5% 4%;
+  display:flex;align-items:center;gap:2%;
+  flex-shrink:0;
+}
+.back-ico{color:rgba(255,255,255,.7);font-size:clamp(10px,1.4vw,22px)}
+.app-hdr-info{flex:1}
+.app-hdr-t{color:#fff;font-size:clamp(10px,1.5vw,22px);font-weight:800}
+.app-hdr-s{color:rgba(255,255,255,.55);font-size:clamp(7px,.9vw,14px)}
+.hdr-cx{display:flex;align-items:center;gap:.5vw}
+.hdr-cx-star{width:clamp(12px,1.8vw,26px);height:clamp(12px,1.8vw,26px)}
+.hdr-cx-name{color:#fff;font-size:clamp(8px,1vw,16px);font-weight:800;opacity:.8}
+
+/* Steps bar */
+.steps-bar{
+  display:flex;align-items:center;
+  padding:2.5% 6%;
+  border-bottom:1px solid #e8ecf4;
+  flex-shrink:0;
+}
+.step-node{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.sn-circle{
+  width:clamp(14px,2.2vw,32px);height:clamp(14px,2.2vw,32px);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(6px,.8vw,12px);font-weight:800;
+  transition:all .4s;
+}
+.sn-circle.done{background:#003CA6;color:#fff}
+.sn-circle.active{background:#FFD700;color:#003CA6}
+.sn-circle.pend{background:#e8ecf4;color:#aaa}
+.sn-label{font-size:clamp(5px,.65vw,10px);color:#888;white-space:nowrap}
+.step-line{flex:1;height:2px;background:#e8ecf4;transition:background .4s;margin:0 1%}
+.step-line.done{background:#003CA6}
+
+/* Form body */
+.app-body{
+  flex:1;padding:3% 6%;
+  display:flex;flex-direction:column;gap:3%;
+  overflow:hidden;
+}
+.section-title{font-size:clamp(8px,1.1vw,17px);font-weight:800;color:#003CA6;margin-bottom:.5%}
+
+.fields-grid{display:flex;flex-direction:column;gap:2.5%}
+.field-row{display:flex;gap:3%}
+.field{flex:1;display:flex;flex-direction:column;gap:3px}
+.field-lbl{font-size:clamp(5px,.65vw,10px);font-weight:700;color:#7a8aa0;text-transform:uppercase;letter-spacing:.06em}
+.field-box{
+  border:1.5px solid #d0d8e8;border-radius:6px;
+  padding:2% 3%;
+  font-size:clamp(7px,.9vw,14px);color:#333;
+  background:#f8faff;
+  display:flex;align-items:center;gap:2%;
+  transition:border-color .3s;
+}
+.field-box.active{border-color:#003CA6}
+.field-val{opacity:0;transition:opacity .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field-val.show{opacity:1}
+.field-chk{color:#00A86B;font-size:clamp(8px,1vw,16px);margin-left:auto;opacity:0;transition:opacity .3s}
+.field-chk.show{opacity:1}
+
+/* Card preview */
+.card-preview{
+  display:flex;gap:4%;align-items:center;
+  background:#f0f4ff;border-radius:10px;
+  padding:2.5% 3%;
+  opacity:0;transform:translateX(20px);
+  transition:opacity .5s,transform .5s;
+}
+.card-preview.show{opacity:1;transform:translateX(0)}
+.mini-card{
+  width:clamp(50px,8vw,120px);aspect-ratio:1.585;
+  background:linear-gradient(135deg,#1a1a2e,#2d2d4e);
+  border-radius:8px;border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  flex-shrink:0;position:relative;overflow:hidden;
+}
+.mini-card::before{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.1),transparent)}
+.mini-chip{position:absolute;top:12%;left:8%;width:22%;aspect-ratio:1.4;background:linear-gradient(135deg,#C8A84B,#F5D679,#A0762A);border-radius:2px}
+.mini-name{position:absolute;bottom:22%;left:8%;font-size:clamp(4px,.7vw,11px);font-weight:900;color:#fff}
+.mini-visa{position:absolute;bottom:6%;right:8%;font-size:clamp(4px,.6vw,10px);font-weight:900;font-style:italic;color:rgba(255,255,255,.5)}
+.card-details{flex:1}
+.cd-title{font-size:clamp(8px,1.1vw,17px);font-weight:800;color:#1a1a2e}
+.cd-sub{font-size:clamp(6px,.8vw,12px);color:#888;margin-top:2px}
+.cd-badge{
+  display:inline-block;margin-top:4px;
+  background:rgba(0,60,166,.08);border:1px solid rgba(0,60,166,.2);
+  border-radius:4px;padding:1px 6px;
+  font-size:clamp(5px,.65vw,10px);font-weight:700;color:#003CA6;
+}
+
+/* CTA area */
+.cta-area{margin-top:auto;display:flex;gap:3%;align-items:center;flex-shrink:0;padding-bottom:1%}
+.cta-note{flex:1;font-size:clamp(6px,.75vw,12px);color:#aaa;line-height:1.4}
+.cta-note strong{color:#00A86B}
+.cta-btn{
+  background:#003CA6;color:#fff;border:none;
+  border-radius:8px;padding:2.5% 5%;
+  font-family:inherit;font-size:clamp(8px,1.1vw,17px);font-weight:800;
+  cursor:pointer;position:relative;overflow:hidden;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s,transform .4s;
+  white-space:nowrap;
+}
+.cta-btn.show{opacity:1;transform:translateY(0)}
+.cta-btn::after{
+  content:'';position:absolute;top:0;left:-80%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  animation:btnShine 2s 1s infinite;
+}
+@keyframes btnShine{to{left:130%}}
+.btn-bar{position:absolute;bottom:0;left:0;height:3px;background:#FFD700;width:0}
+
+/* ══════════════════════════════════
+   SCENE 3 — CONFIRM
+══════════════════════════════════ */
+#s3{background:radial-gradient(ellipse at 50% 35%, #0044c0 0%, #001a5c 55%, #000c30 100%)}
+
+/* Subtle grid overlay */
+#s3::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(100,160,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(100,160,255,.06) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+.confirm-inner{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3%;z-index:2;
+}
+
+/* Check animation */
+.check-ring{
+  width:clamp(70px,13vw,200px);height:clamp(70px,13vw,200px);
+  border-radius:50%;
+  border:4px solid rgba(0,210,110,.35);
+  background:rgba(0,210,110,.1);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  opacity:0;transform:scale(.25);
+  transition:opacity .65s .05s, transform .65s .05s cubic-bezier(.34,1.45,.64,1);
+}
+.sc.on .check-ring{opacity:1;transform:scale(1)}
+.pulse1,.pulse2{
+  position:absolute;inset:-8px;border-radius:50%;
+  border:2px solid rgba(0,210,110,.25);
+  animation:none;
+}
+.sc.on .pulse1{animation:pls 2s .8s ease-out infinite}
+.sc.on .pulse2{animation:pls 2s 1.3s ease-out infinite}
+@keyframes pls{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+
+.check-ico{
+  font-size:clamp(28px,6vw,90px);
+  color:#00D26A;
+  filter:drop-shadow(0 0 16px rgba(0,210,106,.6));
+  opacity:0;transform:scale(.4);
+  transition:opacity .4s .3s, transform .4s .3s cubic-bezier(.34,1.5,.64,1);
+}
+.sc.on .check-ico{opacity:1;transform:scale(1)}
+
+.confirm-label{
+  color:#00D26A;
+  font-size:clamp(9px,1.4vw,22px);font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;
+  text-shadow:0 0 20px rgba(0,210,106,.4);
+  opacity:0;transition:opacity .5s .45s;
+}
+.sc.on .confirm-label{opacity:1}
+
+/* MyCard */
+.s3-card{
+  width:clamp(120px,20vw,320px);aspect-ratio:1.585;
+  background:linear-gradient(135deg,#1a1a2e 0%,#2a2a48 50%,#1a1a2e 100%);
+  border-radius:clamp(8px,1.2vw,18px);
+  border:1.5px solid rgba(255,255,255,.15);
+  box-shadow:0 24px 60px rgba(0,0,0,.6), 0 0 40px rgba(0,60,166,.4);
+  padding:5% 6%;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+  opacity:0;transform:translateY(28px) rotate(-1deg);
+  transition:opacity .6s .15s, transform .6s .15s cubic-bezier(.34,1.2,.64,1);
+}
+.sc.on .s3-card{opacity:1;transform:translateY(0) rotate(-1deg)}
+.s3-card::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.09),transparent)}
+/* Shine sweep */
+.s3-card::after{
+  content:'';position:absolute;top:-50%;bottom:-50%;width:20%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transform:skewX(-14deg);
+  opacity:0;
+}
+.sc.on .s3-card::after{animation:cardShine .8s .4s ease-out forwards;opacity:0}
+@keyframes cardShine{0%{left:-20%;opacity:1}100%{left:130%;opacity:1}}
+
+.s3-chip{width:clamp(20px,3vw,46px);aspect-ratio:1.4;background:linear-gradient(135deg,#C8A84B,#F5D679,#A0762A);border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.s3-nfc{color:rgba(255,255,255,.25);font-size:clamp(8px,1.1vw,18px)}
+.s3-card-name{font-size:clamp(10px,1.8vw,28px);font-weight:900;color:#fff;letter-spacing:.04em}
+.s3-card-bank{font-size:clamp(6px,.8vw,13px);color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.s3-visa{font-size:clamp(10px,1.6vw,24px);font-weight:900;font-style:italic;color:rgba(255,255,255,.55);align-self:flex-end}
+
+/* Final text */
+.final-text{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  padding:1.8% 4%;
+  max-width:72%;
+  text-align:center;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .65s .8s, transform .65s .8s;
+}
+.sc.on .final-text{opacity:1;transform:translateY(0)}
+.final-text p{
+  color:rgba(255,255,255,.88);
+  font-size:clamp(9px,1.3vw,20px);
+  font-weight:500;line-height:1.5;
+}
+.final-text strong{color:#FFD700;font-weight:800}
+
+/* ── Progress ── */
+#prog{position:absolute;bottom:0;left:0;right:0;height:clamp(3px,.4vw,5px);background:rgba(255,255,255,.1);z-index:100}
+#progfill{height:100%;background:linear-gradient(90deg,#003CA6,#00D26A);width:0;transition:width .1s linear}
+
+/* ── Download ── */
+#dl{
+  position:fixed;top:2%;left:2%;z-index:999;
+  background:#003CA6;color:#fff;
+  border:none;border-radius:999px;
+  padding:.5em 1.2em;
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(8px,.9vw,14px);font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+  transition:transform .15s;display:flex;align-items:center;gap:.4em;
+}
+#dl:hover{transform:scale(1.06)}
+</style>
+</head>
+<body>
+
+<button id="dl" onclick="dlMe()">&#x2b07; Descargar</button>
+
+<div id="stage"><div id="film" id="film">
+
+  <!-- SCENE 1 -->
+  <div id="s1" class="sc">
+    <div class="cam" id="cam1">
+      <!-- Office layers -->
+      <div class="bg-ceil"></div>
+      <div class="slats"></div>
+      <div class="bg-wall"></div>
+      <div class="window"></div>
+
+      <!-- CaixaBank wall brand -->
+      <div class="wall-brand">
+        <svg class="wall-star" viewBox="0 0 48 48">
+          <polygon points="24,4 29,18 44,18 32,27 37,42 24,33 11,42 16,27 4,18 19,18" fill="#003CA6"/>
+        </svg>
+        <span class="wall-name">CaixaBank</span>
+      </div>
+
+      <!-- Monitor in background -->
+      <div class="monitor-glow"></div>
+
+      <!-- Background people -->
+      <div class="bg-person bp1">
+        <div class="bp-head" style="width:clamp(10px,1.8vw,26px);height:clamp(10px,1.8vw,26px);background:#c9956a;border-radius:50%;opacity:.65"></div>
+        <div class="bp-body" style="width:clamp(22px,3.5vw,54px);height:clamp(14px,2.5vw,36px);background:#3d4a5c;border-radius:30% 30% 0 0;opacity:.55;margin:1px auto 0"></div>
+      </div>
+      <div class="bg-person bp2" style="left:16%">
+        <div class="bp-head" style="width:clamp(10px,1.8vw,26px);height:clamp(10px,1.8vw,26px);background:#a07050;border-radius:50%;opacity:.65"></div>
+        <div class="bp-body" style="width:clamp(22px,3.5vw,54px);height:clamp(14px,2.5vw,36px);background:#5a3a7a;border-radius:30% 30% 0 0;opacity:.55;margin:1px auto 0"></div>
+      </div>
+
+      <div class="bg-floor"></div>
+      <div class="floor-grid"></div>
+
+      <!-- Main desk -->
+      <div class="desk"></div>
+      <div class="bottle"></div>
+      <div class="brochure"></div>
+
+      <!-- Card on desk -->
+      <div class="card-on-desk">
+        <span class="card-mc-name">MyCard</span>
+        <span class="card-visa-small">VISA</span>
+      </div>
+
+      <!-- Tablet on desk -->
+      <div class="tablet-wrap">
+        <div class="tablet">
+          <div class="tablet-screen">
+            <div class="tab-app">
+              <div class="tab-hdr">
+                <div class="tab-hdr-t">Contratar MyCard</div>
+                <div class="tab-hdr-s">CaixaBank · Tarjetas</div>
+              </div>
+              <div class="tab-body">
+                <div class="tab-row filled" id="tr1"><span class="dot"></span>Titular verificado<span class="ck">✓</span></div>
+                <div class="tab-row filled" id="tr2"><span class="dot"></span>Crédito aprobado<span class="ck">✓</span></div>
+                <div class="tab-row" id="tr3"><span class="dot" style="background:#FFD700"></span>Firma digital<span class="ck">✓</span></div>
+                <div class="tab-cta">Contratar ahora <div class="tab-cta-bar" id="tbar"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main people -->
+      <div class="p-client">
+        <div class="p-c-head"></div>
+        <div class="p-c-body"></div>
+      </div>
+      <div class="p-gestor">
+        <div class="p-g-head"></div>
+        <div class="p-g-body"></div>
+      </div>
+    </div>
+
+    <div class="vignette"></div>
+
+    <!-- Title text -->
+    <div class="s1-text">
+      <div class="s1-pill">
+        <span>Ahora MyCard es m&aacute;s f&aacute;cil de contratar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 2 -->
+  <div id="s2" class="sc">
+    <div class="app-wrap">
+      <div class="app-frame">
+
+        <div class="app-hdr">
+          <span class="back-ico">&#8592;</span>
+          <div class="app-hdr-info">
+            <div class="app-hdr-t">Contrataci&oacute;n MyCard</div>
+            <div class="app-hdr-s">Paso 2 de 3 &mdash; Datos de la tarjeta</div>
+          </div>
+          <div class="hdr-cx">
+            <svg class="hdr-cx-star" viewBox="0 0 48 48">
+              <polygon points="24,4 29,18 44,18 32,27 37,42 24,33 11,42 16,27 4,18 19,18" fill="white" opacity=".7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="steps-bar">
+          <div class="step-node">
+            <div class="sn-circle done">&#10003;</div>
+            <div class="sn-label">Datos</div>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step-node">
+            <div class="sn-circle active" id="sn2">2</div>
+            <div class="sn-label">Tarjeta</div>
+          </div>
+          <div class="step-line" id="sl23"></div>
+          <div class="step-node">
+            <div class="sn-circle pend" id="sn3">3</div>
+            <div class="sn-label">Firma</div>
+          </div>
+        </div>
+
+        <div class="app-body">
+          <div class="section-title">Modalidad de tarjeta</div>
+
+          <div class="fields-grid">
+            <div class="field-row">
+              <div class="field">
+                <div class="field-lbl">Tipo de tarjeta</div>
+                <div class="field-box active" id="f1">
+                  <span class="field-val" id="fv1">MyCard D&eacute;bito &middot; Visa</span>
+                  <span class="field-chk" id="fc1">&#10003;</span>
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-lbl">L&iacute;mite diario</div>
+                <div class="field-box" id="f2">
+                  <span class="field-val" id="fv2">600 &euro; / d&iacute;a</span>
+                  <span class="field-chk" id="fc2">&#10003;</span>
+                </div>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <div class="field-lbl">Importe operaci&oacute;n</div>
+                <div class="field-box" id="f3">
+                  <span class="field-val" id="fv3">50 &euro;</span>
+                  <span class="field-chk" id="fc3">&#10003;</span>
+                </div>
+              </div>
+              <div class="field">
+                <div class="field-lbl">Nivel requerido</div>
+                <div class="field-box" id="f4">
+                  <span class="field-val" id="fv4" style="color:#00A86B;font-weight:700">Sin requisito &#10003;</span>
+                  <span class="field-chk" id="fc4" style="color:#00A86B">&#10003;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card preview -->
+          <div class="card-preview" id="cprev">
+            <div class="mini-card">
+              <div class="mini-chip"></div>
+              <div class="mini-name">MyCard</div>
+              <div class="mini-visa">VISA</div>
+            </div>
+            <div class="card-details">
+              <div class="cd-title">MyCard D&eacute;bito</div>
+              <div class="cd-sub">Sin cuota anual &middot; Contactless &middot; NFC</div>
+              <div class="cd-badge">&#10003;&nbsp; Pol&iacute;tica 50 &euro; activa</div>
+            </div>
+          </div>
+
+          <div class="cta-area">
+            <div class="cta-note">Contrataci&oacute;n instant&aacute;nea.<br><strong>Sin requisito de nivel 200.</strong></div>
+            <button class="cta-btn" id="ctabtn">
+              Confirmar contrataci&oacute;n
+              <div class="btn-bar" id="bbar"></div>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 3 -->
+  <div id="s3" class="sc">
+    <div class="confirm-inner">
+
+      <div class="check-ring">
+        <div class="pulse1"></div>
+        <div class="pulse2"></div>
+        <div class="check-ico">&#10003;</div>
+      </div>
+
+      <div class="confirm-label">Contrataci&oacute;n completada</div>
+
+      <div class="s3-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="s3-chip"></div>
+          <span class="s3-nfc">))))</span>
+        </div>
+        <div>
+          <div class="s3-card-name">MyCard</div>
+          <div class="s3-card-bank">CaixaBank &middot; Visa D&eacute;bito</div>
+        </div>
+        <div class="s3-visa">VISA</div>
+      </div>
+
+      <div class="final-text">
+        <p>A partir de ahora, con la <strong>pol&iacute;tica de 50&nbsp;&euro;</strong>, ya no se requerir&aacute; nivel 200.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="prog"><div id="progfill"></div></div>
+
+</div></div>
+
+<script>
+/* ── Timeline ── 10 seconds */
+const TOTAL = 10000;
+const SC_IN  = [0,    3000, 7000];
+const SC_OUT = [3000, 7000, 10000];
+
+const scenes = ['s1','s2','s3'].map(id => document.getElementById(id));
+let curSc = -1, t = 0, lastTs = null, raf = null;
+let triggered = new Set();
+
+/* scene 2 animation triggers */
+function triggerScene(i) {
+  if (triggered.has(i)) return;
+  triggered.add(i);
+
+  if (i === 0) {
+    /* camera drift */
+    document.getElementById('cam1').classList.add('go');
+    /* tablet row 3 fills in */
+    setTimeout(() => {
+      document.getElementById('tr3').classList.add('filled');
+      document.getElementById('tbar').style.cssText = 'width:100%;transition:width 2s linear';
+    }, 800);
+  }
+
+  if (i === 1) {
+    /* Sequential field reveals */
+    const seq = [
+      ['f1','fv1','fc1',  0],
+      ['f2','fv2','fc2',500],
+      ['f3','fv3','fc3',1000],
+      ['f4','fv4','fc4',1500],
+    ];
+    seq.forEach(([fid,vid,cid,delay]) => {
+      setTimeout(() => {
+        document.getElementById(fid).classList.add('active');
+        document.getElementById(vid).classList.add('show');
+        document.getElementById(cid).classList.add('show');
+      }, delay);
+    });
+    /* card preview */
+    setTimeout(() => document.getElementById('cprev').classList.add('show'), 2000);
+    /* CTA button */
+    setTimeout(() => {
+      document.getElementById('ctabtn').classList.add('show');
+      /* step advance visual */
+      setTimeout(() => {
+        document.getElementById('sn2').className = 'sn-circle done';
+        document.getElementById('sn2').textContent = '✓';
+        document.getElementById('sl23').classList.add('done');
+        document.getElementById('sn3').className = 'sn-circle active';
+        document.getElementById('sn3').textContent = '3';
+        /* button loading bar */
+        document.getElementById('bbar').style.cssText = 'width:100%;transition:width 1.8s linear';
+      }, 800);
+    }, 2500);
+  }
+}
+
+function activateScene(i) {
+  if (i === curSc) return;
+  curSc = i;
+  scenes.forEach((s, j) => s.classList.toggle('on', j === i));
+  triggerScene(i);
+}
+
+function tick(ts) {
+  if (!lastTs) lastTs = ts;
+  const dt = Math.min(ts - lastTs, 60); lastTs = ts;
+  t = Math.min(t + dt, TOTAL);
+  document.getElementById('progfill').style.width = (t / TOTAL * 100) + '%';
+  let sc = 2;
+  for (let i = 0; i < 3; i++) {
+    if (t >= SC_IN[i] && t < SC_OUT[i]) { sc = i; break; }
+  }
+  activateScene(sc);
+  if (t < TOTAL) raf = requestAnimationFrame(tick);
+  else raf = null;
+}
+
+function start() {
+  t = 0; curSc = -1; lastTs = null; triggered = new Set();
+  /* reset scene 1 */
+  document.getElementById('cam1').classList.remove('go');
+  document.getElementById('tr3').classList.remove('filled');
+  document.getElementById('tbar').style.cssText = '';
+  /* reset scene 2 */
+  ['f1','f2','f3','f4'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['fv1','fv2','fv3','fv4','fc1','fc2','fc3','fc4'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('show');
+  });
+  document.getElementById('cprev').classList.remove('show');
+  const cta = document.getElementById('ctabtn');
+  cta.classList.remove('show');
+  document.getElementById('bbar').style.cssText = '';
+  document.getElementById('sn2').className = 'sn-circle active';
+  document.getElementById('sn2').textContent = '2';
+  document.getElementById('sl23').classList.remove('done');
+  document.getElementById('sn3').className = 'sn-circle pend';
+  document.getElementById('sn3').textContent = '3';
+
+  if (raf) cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(tick);
+}
+
+document.getElementById('film').addEventListener('click', start);
+window.addEventListener('load', () => setTimeout(start, 350));
+
+function dlMe() {
+  const b = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = 'MyCard-Contratacion.html';
+  a.click();
+}
+</script>
+</body>
+</html>
